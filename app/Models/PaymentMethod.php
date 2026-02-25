@@ -10,9 +10,18 @@ class PaymentMethod extends Model
     /** @use HasFactory<\Database\Factories\PaymentMethodFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'description',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
     public function transactions()
     {
         return $this->hasMany(Transaction::class);
     }
-
 }

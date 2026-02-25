@@ -12,7 +12,12 @@ class TransactionCategory extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['name', 'code', 'type']; // income | expense
+    protected $fillable = [
+        'code',
+        'name',
+        'type',
+        'notes',
+    ]; // type: income | expense
 
     public function transactions()
     {

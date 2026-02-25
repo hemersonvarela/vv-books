@@ -20,11 +20,13 @@ return new class extends Migration
             $table->foreignId('vendor_id')->nullable()->constrained();
             $table->foreignId('category_id')->constrained('transaction_categories');
             $table->foreignId('payment_method_id')->constrained();
+            $table->string('code',10)->unique();
             $table->date('date');
             $table->decimal('amount', 12, 2);
-            $table->enum('direction', ['income', 'expense']);
+            $table->enum('type', ['income', 'expense']);
             $table->text('description')->nullable();
             $table->string('reference')->nullable();
+            $table->text('notes')->nullable();
             $table->timestamps();
 
             $table->index('date');

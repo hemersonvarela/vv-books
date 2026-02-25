@@ -13,19 +13,21 @@ class Transaction extends Model
     protected $fillable = [
         'project_id',
         'project_step_id',
-        'category_id',
-        'payment_method_id',
         'partner_id',
         'contractor_id',
         'vendor_id',
+        'category_id',
+        'payment_method_id',
+        'date',
         'amount',
+        'type',
         'description',
-        'transaction_date'
+        'reference'
     ];
 
     protected $casts = [
-        'transaction_date' => 'date',
-        'amount' => 'decimal:2'
+        'date' => 'date',
+        'amount' => 'decimal:2',
     ];
 
     public function project()
@@ -67,5 +69,4 @@ class Transaction extends Model
     {
         return $this->hasMany(TransactionAttachment::class);
     }
-
 }
