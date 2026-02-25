@@ -18,6 +18,7 @@ import { dashboard } from '@/routes';
 import { index as usersIndex } from '@/routes/users';
 import { index as vendorsIndex } from '@/routes/vendors';
 import { index as partnersIndex } from '@/routes/partners';
+import { index as projectStepsIndex } from '@/routes/project-steps';
 
 const mainNavItems: NavItem[] = [
     {
@@ -39,6 +40,11 @@ const mainNavItems: NavItem[] = [
         title: 'Partners',
         href: partnersIndex(),
         icon: Users,
+    },
+    {
+        title: 'Project Steps',
+        href: projectStepsIndex(),
+        icon: BookOpen,
     },
 ];
 
