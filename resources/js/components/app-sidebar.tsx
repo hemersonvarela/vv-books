@@ -17,6 +17,7 @@ import AppLogo from './app-logo';
 import { dashboard } from '@/routes';
 import { index as usersIndex } from '@/routes/users';
 import { index as vendorsIndex } from '@/routes/vendors';
+import { index as partnersIndex } from '@/routes/partners';
 
 const mainNavItems: NavItem[] = [
     {
@@ -33,6 +34,11 @@ const mainNavItems: NavItem[] = [
         title: 'Vendors',
         href: vendorsIndex(),
         icon: Store,
+    },
+    {
+        title: 'Partners',
+        href: partnersIndex(),
+        icon: Users,
     },
 ];
 
