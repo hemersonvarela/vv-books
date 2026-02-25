@@ -4,6 +4,7 @@ import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 
@@ -111,7 +112,7 @@ export default function Edit({ vendor }: { vendor: any }) {
 
                         <div className="grid gap-2">
                             <Label htmlFor="notes">Notes</Label>
-                            <Input
+                            <Textarea
                                 id="notes"
                                 value={form.data.notes}
                                 onChange={e =>
