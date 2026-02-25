@@ -1,6 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
+import { Button } from '@/components/ui/button';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Users', href: '/users' },
@@ -13,7 +14,9 @@ export default function Index({ users }: any) {
 
             <div className="p-4">
                 <div className="mb-4 flex justify-end">
-                    <Link href="/users/create" className="btn">Create User</Link>
+                    <Button asChild>
+                        <Link href="/users/create">Create User</Link>
+                    </Button>
                 </div>
 
                 <div className="overflow-x-auto rounded-lg border">
@@ -30,21 +33,27 @@ export default function Index({ users }: any) {
                                 <tr key={user.id} className="border-t">
                                     <td className="px-4 py-2">{user.name}</td>
                                     <td className="px-4 py-2">{user.email}</td>
-                                    <td className="px-4 py-2 text-center">
-                                        <Link href={`/users/${user.id}/edit`} className="mr-2 text-blue-600">Edit</Link>
-                                        <Link
-                                            href={`/users/${user.id}`}
-                                            method="delete"
-                                            as="button"
-                                            onClick={(e: any) => {
-                                                if (!confirm('Delete this user?')) {
-                                                    e.preventDefault();
-                                                }
-                                            }}
-                                            className="text-red-600"
-                                        >
-                                            Delete
-                                        </Link>
+                                    <td className="px-4 py-2">
+                                        <div className="flex justify-center gap-2">
+                                            <Button variant="outline" size="sm" asChild>
+                                                <Link href={`/users/${user.id}/edit`}>Edit</Link>
+                                            </Button>
+
+                                            <Button variant="destructive" size="sm" asChild>
+                                                <Link
+                                                    href={`/users/${user.id}`}
+                                                    method="delete"
+                                                    as="button"
+                                                    onClick={(e: any) => {
+                                                        if (!confirm('Delete this user?')) {
+                                                            e.preventDefault();
+                                                        }
+                                                    }}
+                                                >
+                                                    Delete
+                                                </Link>
+                                            </Button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
