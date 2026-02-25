@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VendorController;
 
 Route::get('/', function () {
     return Inertia::render('welcome', [
@@ -20,4 +21,5 @@ require __DIR__.'/settings.php';
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('users', UserController::class)->except(['show']);
+    Route::resource('vendors', VendorController::class)->except(['show']);
 });
