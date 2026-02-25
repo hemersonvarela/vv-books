@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+        "laravel-boost": {
+            "command": "/usr/bin/php8.5",
+            "args": [
+                "/var/www/html/xxx/vv-books/artisan",
+                "boost:mcp"
+            ]
+        }
+    }
+}
