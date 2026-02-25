@@ -2,6 +2,7 @@ import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { Button } from '@/components/ui/button';
+import Pagination from '@/components/pagination';
 
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Vendors', href: '/vendors' }];
 
@@ -84,6 +85,8 @@ export default function Index({ vendors }: any) {
                         </tbody>
                     </table>
                 </div>
+
+                <Pagination links={vendors.links} />
             </div>
         </AppLayout>
     );

@@ -2,6 +2,7 @@ import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { Button } from '@/components/ui/button';
+import Pagination from '@/components/pagination';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Project Steps', href: '/project-steps' },
@@ -74,6 +75,8 @@ export default function Index({ projectSteps }: any) {
                         </tbody>
                     </table>
                 </div>
+
+                <Pagination links={projectSteps.links} />
             </div>
         </AppLayout>
     );
