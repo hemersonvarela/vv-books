@@ -9,15 +9,16 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class PartnerFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = Partner::class;
+
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->name(),
+            'email' => fake()->optional()->safeEmail(),
+            'phone' => fake()->optional()->phoneNumber(),
+            'tax_id' => fake()->optional()->bothify('##-#######'),
+            'notes' => fake()->optional()->sentence(),
         ];
     }
 }

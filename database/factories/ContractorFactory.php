@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Contractor;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,15 +10,17 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ContractorFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = Contractor::class;
+
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->name(),
+            'company_name' => fake()->optional()->company(),
+            'email' => fake()->optional()->safeEmail(),
+            'phone' => fake()->optional()->phoneNumber(),
+            'tax_id' => fake()->optional()->bothify('##-#######'),
+            'notes' => fake()->optional()->sentence(),
         ];
     }
 }

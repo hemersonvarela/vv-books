@@ -19,11 +19,18 @@ class ProjectFactory extends Factory
 
     public function definition(): array
     {
+        $start = fake()->optional()->dateTimeBetween('-6 months', '+1 month');
+        $end = $start
+            ? fake()->optional()->dateTimeBetween($start, '+12 months')
+            : null;
+
         return [
             'name' => fake()->company(),
-            'description' => fake()->sentence(),
-            'start_date' => fake()->date(),
-            'status' => 'active'
+            'description' => fake()->optional()->sentence(),
+            'start_date' => $start?->format('Y-m-d'),
+            'end_date' => $end?->format('Y-m-d'),
+            'status' => fake()->randomElement(['active', 'on_hold', 'completed']),
+            'notes' => fake()->optional()->paragraph(),
         ];
     }
 }

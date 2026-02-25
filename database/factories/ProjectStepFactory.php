@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\ProjectStep;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,15 +10,17 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ProjectStepFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = ProjectStep::class;
+
     public function definition(): array
     {
+        // Keep "code" 3 chars and unique, matching the migration constraint.
         return [
-            //
+            'code' => strtoupper(fake()->unique()->lexify('???')),
+            'name' => fake()->words(2, true),
+            'description' => fake()->optional()->sentence(),
+            'step_order' => fake()->unique()->numberBetween(1, 200),
+            'status' => fake()->boolean(90),
         ];
     }
 }

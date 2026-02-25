@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Partner;
 use Illuminate\Database\Seeder;
 
 class PartnerSeeder extends Seeder
@@ -12,6 +12,29 @@ class PartnerSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        $seeds = [
+            [
+                'id' => 1,
+                'name' => 'Sample Partner 1',
+                'email' => null,
+                'phone' => null,
+                'tax_id' => null,
+                'notes' => null,
+            ],
+            [
+                'id' => 2,
+                'name' => 'Sample Partner 2',
+                'email' => null,
+                'phone' => null,
+                'tax_id' => null,
+                'notes' => null,
+            ],
+        ];
+
+        Partner::upsert(
+            $seeds,
+            ['id'],
+            ['name', 'email', 'phone', 'tax_id', 'notes']
+        );
     }
 }
