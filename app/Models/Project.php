@@ -10,6 +10,7 @@ class Project extends Model
 {
     /** @use HasFactory<\Database\Factories\ProjectFactory> */
     use HasFactory;
+
     use SoftDeletes;
 
     protected $fillable = [
@@ -24,6 +25,7 @@ class Project extends Model
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
+        'status' => 'boolean',
     ];
 
     public function transactions()

@@ -35,7 +35,17 @@ export default function Index({ projects }: any) {
                             {projects.data.map((project: any) => (
                                 <tr key={project.id} className="border-t">
                                     <td className="px-4 py-2">{project.name}</td>
-                                    <td className="px-4 py-2">{project.status}</td>
+                                    <td className="px-4 py-2">
+                                        {project.status ? (
+                                            <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                                                Active
+                                            </span>
+                                        ) : (
+                                            <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">
+                                                Inactive
+                                            </span>
+                                        )}
+                                    </td>
                                     <td className="px-4 py-2">{project.start_date || '—'}</td>
                                     <td className="px-4 py-2">{project.end_date || '—'}</td>
                                     <td className="px-4 py-2">

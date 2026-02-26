@@ -2,6 +2,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -19,7 +20,7 @@ export default function Create() {
         description: '',
         start_date: '',
         end_date: '',
-        status: 'Active',
+        status: true,
         notes: '',
     });
 
@@ -100,17 +101,15 @@ export default function Create() {
                             </div>
                         </div>
 
-                        <div className="grid gap-2">
-                            <Label htmlFor="status">Status</Label>
-                            <Input
+                        <div className="flex items-center space-x-2">
+                            <Checkbox
                                 id="status"
-                                value={form.data.status}
-                                onChange={e =>
-                                    form.setData('status', e.target.value)
+                                checked={form.data.status}
+                                onCheckedChange={(checked) =>
+                                    form.setData('status', checked === true)
                                 }
-                                aria-invalid={Boolean(form.errors.status)}
-                                required
                             />
+                            <Label htmlFor="status">Active</Label>
                             <InputError message={form.errors.status} />
                         </div>
 

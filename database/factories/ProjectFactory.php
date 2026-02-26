@@ -29,7 +29,7 @@ class ProjectFactory extends Factory
             'description' => fake()->optional()->sentence(),
             'start_date' => $start?->format('Y-m-d'),
             'end_date' => $end?->format('Y-m-d'),
-            'status' => fake()->randomElement(['active', 'on_hold', 'completed']),
+            'status' => fake()->boolean(90),
             'notes' => fake()->optional()->paragraph(),
         ];
     }

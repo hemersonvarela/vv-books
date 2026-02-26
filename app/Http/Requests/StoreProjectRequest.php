@@ -26,7 +26,7 @@ class StoreProjectRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'start_date' => ['nullable', 'date'],
             'end_date' => ['nullable', 'date'],
-            'status' => ['required', 'string', 'max:50'],
+            'status' => ['required', 'boolean'],
             'notes' => ['nullable', 'string'],
         ];
     }

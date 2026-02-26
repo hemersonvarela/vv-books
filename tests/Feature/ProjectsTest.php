@@ -16,7 +16,7 @@ it('allows authenticated users to do project crud', function () {
             'description' => 'Description for project one',
             'start_date' => '2026-01-01',
             'end_date' => '2026-12-31',
-            'status' => 'Active',
+            'status' => true,
             'notes' => 'Some notes',
         ])
         ->assertRedirect('/projects');
@@ -29,7 +29,7 @@ it('allows authenticated users to do project crud', function () {
             'description' => 'Updated description',
             'start_date' => '2026-01-01',
             'end_date' => '2026-12-31',
-            'status' => 'Completed',
+            'status' => false,
             'notes' => 'Updated notes',
         ])
         ->assertRedirect('/projects');
