@@ -30,15 +30,17 @@ class TransactionFactory extends Factory
             'category_id' => TransactionCategory::factory(),
             'payment_method_id' => PaymentMethod::factory(),
 
+            'code' => fake()->unique()->lexify('TXN-?????'),
             'partner_id' => $partyType === 'partner' ? Partner::factory() : null,
             'contractor_id' => $partyType === 'contractor' ? Contractor::factory() : null,
             'vendor_id' => $partyType === 'vendor' ? Vendor::factory() : null,
 
             'date' => fake()->date(),
             'amount' => fake()->randomFloat(2, 1, 20000),
-            'direction' => fake()->randomElement(['income', 'expense']),
+            'type' => fake()->randomElement(['income', 'expense']),
             'description' => fake()->optional()->sentence(),
             'reference' => fake()->optional()->bothify('REF-#####'),
+            'verified_at' => fake()->optional()->date(),
         ];
     }
 }

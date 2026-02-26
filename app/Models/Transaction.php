@@ -22,11 +22,13 @@ class Transaction extends Model
         'amount',
         'type',
         'description',
-        'reference'
+        'reference',
+        'verified_at',
     ];
 
     protected $casts = [
         'date' => 'date',
+        'verified_at' => 'date',
         'amount' => 'decimal:2',
     ];
 

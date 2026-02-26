@@ -17,7 +17,9 @@ class TransactionCategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'code' => strtoupper(fake()->unique()->lexify('???')),
+            'name' => fake()->word(),
+            'type' => fake()->randomElement(['income', 'expense']),
         ];
     }
 }
