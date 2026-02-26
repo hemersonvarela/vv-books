@@ -20,6 +20,7 @@ import { index as vendorsIndex } from '@/routes/vendors';
 import { index as partnersIndex } from '@/routes/partners';
 import { index as projectStepsIndex } from '@/routes/project-steps';
 import { index as transactionCategoriesIndex } from '@/routes/transaction-categories';
+import { index as contractorsIndex } from '@/routes/contractors';
 
 const mainNavItems: NavItem[] = [
     {
@@ -51,6 +52,11 @@ const mainNavItems: NavItem[] = [
         title: 'Transaction Categories',
         href: transactionCategoriesIndex(),
         icon: List,
+    },
+    {
+        title: 'Contractors',
+        href: contractorsIndex(),
+        icon: Users,
     },
 ];
 

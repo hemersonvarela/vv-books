@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContractorController;
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ProjectStepController;
 use App\Http\Controllers\TransactionCategoryController;
@@ -25,6 +26,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('users', UserController::class)->except(['show']);
     Route::resource('vendors', VendorController::class)->except(['show']);
     Route::resource('partners', PartnerController::class)->except(['show']);
+    Route::resource('contractors', ContractorController::class)->except(['show']);
     Route::resource('project-steps', ProjectStepController::class)->except(['show']);
     Route::resource('transaction-categories', TransactionCategoryController::class)->except(['show']);
 });
