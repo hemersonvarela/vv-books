@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ProjectStepController;
+use App\Http\Controllers\TransactionCategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
@@ -25,4 +26,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('vendors', VendorController::class)->except(['show']);
     Route::resource('partners', PartnerController::class)->except(['show']);
     Route::resource('project-steps', ProjectStepController::class)->except(['show']);
+    Route::resource('transaction-categories', TransactionCategoryController::class)->except(['show']);
 });

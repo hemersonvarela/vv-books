@@ -8,3 +8,22 @@ sail artisan db:seed
 sail artisan test
 
 sail npm run dev   
+
+/**
+# /Users/hemerson/htdocs/apps/vv-books/.vscode/mcp.json
+{
+    "servers": {
+            "laravel-boost": {
+            "command": "./vendor/bin/sail",     <------
+            "args": [
+            "artisan",
+            "boost:mcp"
+            ]
+        }
+    }
+}
+
+**/
+
+
+
