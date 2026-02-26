@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use App\Http\Resources\ProjectCollection;
+use App\Http\Resources\ProjectResource;
 use App\Models\Project;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -15,17 +17,10 @@ class ProjectController extends Controller
     {
         $projects = Project::query()
             ->latest('id')
-            ->paginate(10)
-            ->through(fn ($project) => [
-                'id' => $project->id,
-                'name' => $project->name,
-                'status' => $project->status,
-                'start_date' => $project->start_date?->format('m/d/Y'),
-                'end_date' => $project->end_date?->format('m/d/Y'),
-            ]);
+            ->paginate(10);
 
         return Inertia::render('projects/index', [
-            'projects' => $projects,
+            'projects' => new ProjectCollection($projects),
         ]);
     }
 
@@ -44,15 +39,7 @@ class ProjectController extends Controller
     public function edit(Project $project): InertiaResponse
     {
         return Inertia::render('projects/edit', [
-            'project' => [
-                'id' => $project->id,
-                'name' => $project->name,
-                'description' => $project->description,
-                'start_date' => $project->start_date?->format('Y-m-d'),
-                'end_date' => $project->end_date?->format('Y-m-d'),
-                'status' => $project->status,
-                'notes' => $project->notes,
-            ],
+            'project' => (new ProjectResource($project))->resolve(),
         ]);
     }
 

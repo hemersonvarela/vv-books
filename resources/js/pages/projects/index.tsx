@@ -46,8 +46,8 @@ export default function Index({ projects }: any) {
                                             </span>
                                         )}
                                     </td>
-                                    <td className="px-4 py-2">{project.start_date || '—'}</td>
-                                    <td className="px-4 py-2">{project.end_date || '—'}</td>
+                                    <td className="px-4 py-2">{project.start_date_formatted || '—'}</td>
+                                    <td className="px-4 py-2">{project.end_date_formatted || '—'}</td>
                                     <td className="px-4 py-2">
                                         <div className="flex justify-center gap-2">
                                             <Button variant="outline" size="sm" asChild>
@@ -76,7 +76,7 @@ export default function Index({ projects }: any) {
                     </table>
                 </div>
 
-                <Pagination links={projects.links} />
+                <Pagination links={projects.meta.links} />
             </div>
         </AppLayout>
     );
