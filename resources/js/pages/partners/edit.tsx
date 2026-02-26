@@ -2,6 +2,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -13,19 +14,39 @@ const breadcrumbs = (partner: any): BreadcrumbItem[] => [
     { title: partner.name, href: `/partners/${partner.id}/edit` },
 ];
 
-export default function Edit({ partner }: { partner: any }) {
+export default function Edit({
+    partner,
+    projects,
+}: {
+    partner: any;
+    projects: any[];
+}) {
     const form = useForm({
         name: partner.name || '',
         email: partner.email || '',
         phone: partner.phone || '',
         tax_id: partner.tax_id || '',
         notes: partner.notes || '',
+        project_ids: (partner.projects || []).map((p: any) => p.id) as number[],
     });
 
     function submit(e: any) {
         e.preventDefault();
         form.put(`/partners/${partner.id}`);
     }
+
+    const toggleProject = (projectId: number) => {
+        const currentIds = [...form.data.project_ids];
+        const index = currentIds.indexOf(projectId);
+
+        if (index > -1) {
+            currentIds.splice(index, 1);
+        } else {
+            currentIds.push(projectId);
+        }
+
+        form.setData('project_ids', currentIds);
+    };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs(partner)}>
@@ -108,6 +129,37 @@ export default function Edit({ partner }: { partner: any }) {
                             />
                             <InputError message={form.errors.notes} />
                         </div>
+
+                        {projects.length > 0 && (
+                            <div className="grid gap-3">
+                                <Label>Associated Projects</Label>
+                                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                    {projects.map((project: any) => (
+                                        <div
+                                            key={project.id}
+                                            className="flex items-center space-x-2"
+                                        >
+                                            <Checkbox
+                                                id={`project-${project.id}`}
+                                                checked={form.data.project_ids.includes(
+                                                    project.id
+                                                )}
+                                                onCheckedChange={() =>
+                                                    toggleProject(project.id)
+                                                }
+                                            />
+                                            <Label
+                                                htmlFor={`project-${project.id}`}
+                                                className="text-sm font-normal"
+                                            >
+                                                {project.name}
+                                            </Label>
+                                        </div>
+                                    ))}
+                                </div>
+                                <InputError message={form.errors.project_ids} />
+                            </div>
+                        )}
 
                         <div className="flex items-center gap-3">
                             <Button disabled={form.processing}>Save</Button>

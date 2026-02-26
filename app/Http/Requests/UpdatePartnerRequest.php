@@ -19,6 +19,8 @@ class UpdatePartnerRequest extends FormRequest
             'phone' => ['nullable', 'string', 'max:255'],
             'tax_id' => ['nullable', 'string', 'max:255'],
             'notes' => ['nullable', 'string'],
+            'project_ids' => ['nullable', 'array'],
+            'project_ids.*' => ['exists:projects,id'],
         ];
     }
 }
