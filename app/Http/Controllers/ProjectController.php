@@ -15,7 +15,14 @@ class ProjectController extends Controller
     {
         $projects = Project::query()
             ->latest('id')
-            ->paginate(10);
+            ->paginate(10)
+            ->through(fn ($project) => [
+                'id' => $project->id,
+                'name' => $project->name,
+                'status' => $project->status,
+                'start_date' => $project->start_date?->format('m/d/Y'),
+                'end_date' => $project->end_date?->format('m/d/Y'),
+            ]);
 
         return Inertia::render('projects/index', [
             'projects' => $projects,
@@ -37,7 +44,15 @@ class ProjectController extends Controller
     public function edit(Project $project): InertiaResponse
     {
         return Inertia::render('projects/edit', [
-            'project' => $project,
+            'project' => [
+                'id' => $project->id,
+                'name' => $project->name,
+                'description' => $project->description,
+                'start_date' => $project->start_date?->format('Y-m-d'),
+                'end_date' => $project->end_date?->format('Y-m-d'),
+                'status' => $project->status,
+                'notes' => $project->notes,
+            ],
         ]);
     }
 
