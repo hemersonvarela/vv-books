@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
-use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -23,15 +24,21 @@ class UserController extends Controller
 
     public function create(): InertiaResponse
     {
-        return Inertia::render('users/create');
+        return Inertia::render('users/create', [
+            'projects' => Project::query()->orderBy('name')->get(),
+        ]);
     }
 
     public function store(StoreUserRequest $request): RedirectResponse
     {
         $data = $request->validated();
+        $projectIds = $data['project_ids'] ?? [];
+        unset($data['project_ids']);
+
         $data['password'] = Hash::make($data['password']);
 
-        User::create($data);
+        $user = User::create($data);
+        $user->projects()->sync($projectIds);
 
         return redirect()->route('users.index');
     }
@@ -39,27 +46,32 @@ class UserController extends Controller
     public function edit(User $user): InertiaResponse
     {
         return Inertia::render('users/edit', [
-            'user' => $user,
+            'user' => $user->load('projects'),
+            'projects' => Project::query()->orderBy('name')->get(),
         ]);
     }
 
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
         $data = $request->validated();
+        $projectIds = $data['project_ids'] ?? [];
+        unset($data['project_ids']);
 
-        if (!empty($data['password'])) {
+        if (! empty($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         } else {
             unset($data['password']);
         }
 
         $user->update($data);
+        $user->projects()->sync($projectIds);
 
         return redirect()->route('users.index');
     }
 
     public function destroy(User $user): RedirectResponse
     {
+        $user->projects()->detach();
         $user->delete();
 
         return redirect()->route('users.index');

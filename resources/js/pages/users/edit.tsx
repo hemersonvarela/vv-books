@@ -2,6 +2,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
@@ -12,13 +13,32 @@ const breadcrumbs = (user: any): BreadcrumbItem[] => [
     { title: user.name, href: `/users/${user.id}/edit` },
 ];
 
-export default function Edit({ user }: any) {
-    const form = useForm({ name: user.name || '', email: user.email || '', password: '', password_confirmation: '' });
+export default function Edit({ user, projects }: { user: any; projects: any[] }) {
+    const form = useForm({
+        name: user.name || '',
+        email: user.email || '',
+        password: '',
+        password_confirmation: '',
+        project_ids: (user.projects || []).map((p: any) => p.id) as number[],
+    });
 
     function submit(e: any) {
         e.preventDefault();
         form.put(`/users/${user.id}`);
     }
+
+    const toggleProject = (projectId: number) => {
+        const currentIds = [...form.data.project_ids];
+        const index = currentIds.indexOf(projectId);
+
+        if (index > -1) {
+            currentIds.splice(index, 1);
+        } else {
+            currentIds.push(projectId);
+        }
+
+        form.setData('project_ids', currentIds);
+    };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs(user)}>
@@ -120,6 +140,37 @@ export default function Edit({ user }: any) {
                                 placeholder="Confirm password"
                             />
                         </div>
+
+                        {projects.length > 0 && (
+                            <div className="grid gap-3">
+                                <Label>Associated Projects</Label>
+                                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                    {projects.map((project: any) => (
+                                        <div
+                                            key={project.id}
+                                            className="flex items-center space-x-2"
+                                        >
+                                            <Checkbox
+                                                id={`project-${project.id}`}
+                                                checked={form.data.project_ids.includes(
+                                                    project.id
+                                                )}
+                                                onCheckedChange={() =>
+                                                    toggleProject(project.id)
+                                                }
+                                            />
+                                            <Label
+                                                htmlFor={`project-${project.id}`}
+                                                className="text-sm font-normal"
+                                            >
+                                                {project.name}
+                                            </Label>
+                                        </div>
+                                    ))}
+                                </div>
+                                <InputError message={form.errors.project_ids} />
+                            </div>
+                        )}
 
                         <div className="flex items-center gap-3">
                             <Button disabled={form.processing}>Save</Button>
