@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ContractorController;
 use App\Http\Controllers\PartnerController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectStepController;
 use App\Http\Controllers\TransactionCategoryController;
 use App\Http\Controllers\UserController;
@@ -28,5 +29,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('partners', PartnerController::class)->except(['show']);
     Route::resource('contractors', ContractorController::class)->except(['show']);
     Route::resource('project-steps', ProjectStepController::class)->except(['show']);
+    Route::resource('projects', ProjectController::class)->except(['show']);
     Route::resource('transaction-categories', TransactionCategoryController::class)->except(['show']);
 });

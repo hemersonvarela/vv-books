@@ -21,6 +21,7 @@ import { index as partnersIndex } from '@/routes/partners';
 import { index as projectStepsIndex } from '@/routes/project-steps';
 import { index as transactionCategoriesIndex } from '@/routes/transaction-categories';
 import { index as contractorsIndex } from '@/routes/contractors';
+import { index as projectsIndex } from '@/routes/projects';
 
 const mainNavItems: NavItem[] = [
     {
@@ -58,20 +59,25 @@ const mainNavItems: NavItem[] = [
         href: contractorsIndex(),
         icon: Users,
     },
-];
-
-const footerNavItems: NavItem[] = [
     {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
+        title: 'Projects',
+        href: projectsIndex(),
         icon: Folder,
     },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
-    },
 ];
+
+// const footerNavItems: NavItem[] = [
+//     {
+//         title: 'Repository',
+//         href: 'https://github.com/laravel/react-starter-kit',
+//         icon: Folder,
+//     },
+//     {
+//         title: 'Documentation',
+//         href: 'https://laravel.com/docs/starter-kits#react',
+//         icon: BookOpen,
+//     },
+// ];
 
 export function AppSidebar() {
     return (
@@ -93,7 +99,7 @@ export function AppSidebar() {
             </SidebarContent>
 
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
+                {/*<NavFooter items={footerNavItems} className="mt-auto" />*/}
                 <NavUser />
             </SidebarFooter>
         </Sidebar>
