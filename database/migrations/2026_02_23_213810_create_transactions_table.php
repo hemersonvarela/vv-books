@@ -32,17 +32,6 @@ return new class extends Migration
             $table->index('date');
             $table->index('project_id');
         });
-
-        // CHECK constraint for at least one related party
-        DB::statement("
-            ALTER TABLE transactions
-            ADD CONSTRAINT chk_transaction_party
-            CHECK (
-                partner_id IS NOT NULL
-                OR contractor_id IS NOT NULL
-                OR vendor_id IS NOT NULL
-            )
-        ");
     }
 
     /**

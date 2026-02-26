@@ -25,6 +25,7 @@ class ProjectFactory extends Factory
             : null;
 
         return [
+            'code' => strtoupper(fake()->unique()->lexify('???')),
             'name' => fake()->company(),
             'description' => fake()->optional()->sentence(),
             'start_date' => $start?->format('Y-m-d'),

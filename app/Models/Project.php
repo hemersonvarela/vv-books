@@ -14,6 +14,7 @@ class Project extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'code',
         'name',
         'description',
         'start_date',

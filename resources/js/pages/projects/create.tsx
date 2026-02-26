@@ -16,6 +16,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function Create() {
     const form = useForm({
+        code: '',
         name: '',
         description: '',
         start_date: '',
@@ -44,6 +45,22 @@ export default function Create() {
                     />
 
                     <form onSubmit={submit} className="space-y-6">
+                        <div className="grid gap-2">
+                            <Label htmlFor="code">Code</Label>
+                            <Input
+                                id="code"
+                                value={form.data.code}
+                                onChange={e =>
+                                    form.setData('code', e.target.value.toUpperCase())
+                                }
+                                placeholder="e.g. ABC"
+                                maxLength={3}
+                                aria-invalid={Boolean(form.errors.code)}
+                                required
+                            />
+                            <InputError message={form.errors.code} />
+                        </div>
+
                         <div className="grid gap-2">
                             <Label htmlFor="name">Name</Label>
                             <Input

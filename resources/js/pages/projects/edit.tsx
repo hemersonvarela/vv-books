@@ -16,6 +16,7 @@ const breadcrumbs = (project: any): BreadcrumbItem[] => [
 
 export default function Edit({ project }: { project: any }) {
     const form = useForm({
+        code: project.code || '',
         name: project.name || '',
         description: project.description || '',
         start_date: project.start_date || '',
@@ -44,6 +45,22 @@ export default function Edit({ project }: { project: any }) {
                     />
 
                     <form onSubmit={submit} className="space-y-6">
+                        <div className="grid gap-2">
+                            <Label htmlFor="code">Code</Label>
+                            <Input
+                                id="code"
+                                value={form.data.code}
+                                onChange={e =>
+                                    form.setData('code', e.target.value.toUpperCase())
+                                }
+                                placeholder="e.g. ABC"
+                                maxLength={3}
+                                aria-invalid={Boolean(form.errors.code)}
+                                required
+                            />
+                            <InputError message={form.errors.code} />
+                        </div>
+
                         <div className="grid gap-2">
                             <Label htmlFor="name">Name</Label>
                             <Input

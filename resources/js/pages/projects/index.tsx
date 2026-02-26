@@ -24,6 +24,7 @@ export default function Index({ projects }: any) {
                     <table className="min-w-full divide-y">
                         <thead>
                             <tr>
+                                <th className="px-4 py-2 text-left">Code</th>
                                 <th className="px-4 py-2 text-left">Name</th>
                                 <th className="px-4 py-2 text-left">Status</th>
                                 <th className="px-4 py-2 text-left">Start Date</th>
@@ -34,6 +35,7 @@ export default function Index({ projects }: any) {
                         <tbody>
                             {projects.data.map((project: any) => (
                                 <tr key={project.id} className="border-t">
+                                    <td className="px-4 py-2 font-mono text-xs uppercase tracking-wider">{project.code}</td>
                                     <td className="px-4 py-2">{project.name}</td>
                                     <td className="px-4 py-2">
                                         {project.status ? (
