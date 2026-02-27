@@ -64,9 +64,9 @@ test('it validates row data during import', function () {
     TransactionCategory::factory()->create(['code' => 'C01']);
     PaymentMethod::factory()->create(['name' => 'Cash']);
 
-    // CSV with invalid project code (XYZ)
+    // CSV with invalid payment method (BitCoin)
     $content = "date,description,amount,type,project,project_step,transaction_category,payment_method,reference\n";
-    $content .= "2026-02-26,Test,100,expense,XYZ,S01,C01,Cash,REF001\n";
+    $content .= "2026-02-26,Test,100,expense,ABC,S01,C01,BitCoin,REF001\n";
 
     $file = UploadedFile::fake()->createWithContent('transactions.csv', $content);
 
@@ -76,7 +76,7 @@ test('it validates row data during import', function () {
 
     $response->assertSessionHas('import_errors');
     $errors = session('import_errors');
-    expect($errors[0]['errors'])->toContain("Project code 'XYZ' not found.");
+    expect($errors[0]['errors'])->toContain('The selected payment_method is invalid.');
 });
 
 test('it successfully imports valid transactions', function () {

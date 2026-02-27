@@ -30,9 +30,7 @@ class TransactionsImport implements SkipsEmptyRows, ToModel, WithHeadingRow, Wit
         $this->projects = Project::pluck('id', 'code')->toArray();
         $this->steps = ProjectStep::pluck('id', 'code')->toArray();
         $this->categories = TransactionCategory::pluck('id', 'code')->toArray();
-        $this->paymentMethods = PaymentMethod::whereIn('name', [
-            'Check', 'Bank Transfer', 'Credit Card', 'Cash', 'Zelle',
-        ])->pluck('id', 'name')->toArray();
+        $this->paymentMethods = PaymentMethod::where('is_active', true)->pluck('id', 'name')->toArray();
     }
 
     public function model(array $row): ?Transaction
@@ -111,7 +109,7 @@ class TransactionsImport implements SkipsEmptyRows, ToModel, WithHeadingRow, Wit
                     $fail("Transaction category code '{$value}' not found.");
                 }
             }],
-            'payment_method' => ['required', Rule::in(['Check', 'Bank Transfer', 'Credit Card', 'Cash', 'Zelle']), function ($attribute, $value, $fail) {
+            'payment_method' => ['required', Rule::in(array_keys($this->paymentMethods)), function ($attribute, $value, $fail) {
                 if (! isset($this->paymentMethods[$value])) {
                     $fail("Payment method '{$value}' not found in database.");
                 }
