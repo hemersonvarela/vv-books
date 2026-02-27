@@ -22,6 +22,7 @@ import { index as projectStepsIndex } from '@/routes/project-steps';
 import { index as transactionCategoriesIndex } from '@/routes/transaction-categories';
 import { index as contractorsIndex } from '@/routes/contractors';
 import { index as projectsIndex } from '@/routes/projects';
+import transactions from '@/routes/transactions';
 
 const mainNavItems: NavItem[] = [
     {
@@ -63,6 +64,11 @@ const mainNavItems: NavItem[] = [
         title: 'Projects',
         href: projectsIndex(),
         icon: Folder,
+    },
+    {
+        title: 'Import Transactions',
+        href: transactions.import.index(),
+        icon: List,
     },
 ];
 

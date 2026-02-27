@@ -18,6 +18,7 @@ class Transaction extends Model
         'vendor_id',
         'category_id',
         'payment_method_id',
+        'code',
         'date',
         'amount',
         'type',
