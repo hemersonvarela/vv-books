@@ -23,6 +23,8 @@ class TransactionsImport implements SkipsEmptyRows, ToModel, WithHeadingRow, Wit
 
     private array $paymentMethods;
 
+    private array $consecutiveNumbers = [];
+
     public function __construct()
     {
         $this->projects = Project::pluck('id', 'code')->toArray();
@@ -36,19 +38,51 @@ class TransactionsImport implements SkipsEmptyRows, ToModel, WithHeadingRow, Wit
     public function model(array $row): ?Transaction
     {
         $amount = $this->sanitizeAmount($row['amount']);
+        $projectCode = strtoupper($row['project']);
+        $stepCode = strtoupper($row['project_step']);
+
+        $projectId = $this->projects[$projectCode];
+        $stepId = $this->steps[$stepCode];
+
+        $nextNumber = $this->getNextNumber($projectId, $stepId, $projectCode, $stepCode);
 
         return new Transaction([
             'date' => $this->transformDate($row['date']),
             'description' => $row['description'],
             'amount' => $amount,
-            'project_id' => $this->projects[strtoupper($row['project'])],
-            'project_step_id' => $this->steps[strtoupper($row['project_step'])],
+            'project_id' => $projectId,
+            'project_step_id' => $stepId,
             'category_id' => $this->categories[strtoupper($row['transaction_category'])],
             'payment_method_id' => $this->paymentMethods[$row['payment_method']],
             'reference' => $row['reference'] ?? null,
             'type' => $amount >= 0 ? 'income' : 'expense',
-            'code' => 'T'.strtoupper(bin2hex(random_bytes(4))), // 9 characters, fits in 10
+            'code' => "{$projectCode}-{$stepCode}-{$nextNumber}",
         ]);
+    }
+
+    private function getNextNumber(int $projectId, int $stepId, string $projectCode, string $stepCode): int
+    {
+        $key = "{$projectId}-{$stepId}";
+
+        if (! isset($this->consecutiveNumbers[$key])) {
+            $lastCode = Transaction::where('project_id', $projectId)
+                ->where('project_step_id', $stepId)
+                ->where('code', 'like', "{$projectCode}-{$stepCode}-%")
+                ->orderByRaw('CAST(SUBSTRING_INDEX(code, "-", -1) AS UNSIGNED) DESC')
+                ->value('code');
+
+            if ($lastCode) {
+                $parts = explode('-', $lastCode);
+                $lastNumber = (int) end($parts);
+                $this->consecutiveNumbers[$key] = $lastNumber + 1;
+            } else {
+                $this->consecutiveNumbers[$key] = 1;
+            }
+        } else {
+            $this->consecutiveNumbers[$key]++;
+        }
+
+        return $this->consecutiveNumbers[$key];
     }
 
     public function rules(): array

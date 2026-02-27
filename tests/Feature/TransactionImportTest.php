@@ -91,5 +91,26 @@ test('it successfully imports valid transactions', function () {
         'description' => 'Test Transaction',
         'amount' => 123.45,
         'reference' => 'REF123',
+        'code' => 'ABC-S01-1',
     ]);
+});
+
+test('it generates consecutive codes during import', function () {
+    $user = User::factory()->create();
+
+    Project::factory()->create(['code' => 'ABC']);
+    ProjectStep::factory()->create(['code' => 'S01']);
+    TransactionCategory::factory()->create(['code' => 'C01']);
+    PaymentMethod::factory()->create(['name' => 'Cash']);
+
+    $content = "date,description,amount,project,project_step,transaction_category,payment_method,reference\n";
+    $content .= "2026-02-26,T1,100,ABC,S01,C01,Cash,\n";
+    $content .= "2026-02-26,T2,200,ABC,S01,C01,Cash,\n";
+
+    $file = UploadedFile::fake()->createWithContent('transactions.csv', $content);
+
+    $this->actingAs($user)->post(route('transactions.import.store'), ['file' => $file]);
+
+    $this->assertDatabaseHas('transactions', ['description' => 'T1', 'code' => 'ABC-S01-1']);
+    $this->assertDatabaseHas('transactions', ['description' => 'T2', 'code' => 'ABC-S01-2']);
 });

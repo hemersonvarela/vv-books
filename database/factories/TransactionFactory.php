@@ -30,7 +30,16 @@ class TransactionFactory extends Factory
             'category_id' => TransactionCategory::factory(),
             'payment_method_id' => PaymentMethod::factory(),
 
-            'code' => fake()->unique()->lexify('TXN-?????'),
+            'code' => function (array $attributes) {
+                $project = Project::find($attributes['project_id']) ?? Project::factory()->create();
+                $step = ProjectStep::find($attributes['project_step_id']) ?? ProjectStep::factory()->create();
+
+                $lastNumber = Transaction::where('project_id', $project->id)
+                    ->where('project_step_id', $step->id)
+                    ->count();
+
+                return strtoupper($project->code).'-'.strtoupper($step->code).'-'.($lastNumber + 1);
+            },
             'partner_id' => $partyType === 'partner' ? Partner::factory() : null,
             'contractor_id' => $partyType === 'contractor' ? Contractor::factory() : null,
             'vendor_id' => $partyType === 'vendor' ? Vendor::factory() : null,
