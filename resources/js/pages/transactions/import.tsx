@@ -8,7 +8,8 @@ import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { CheckCircle2, AlertCircle } from 'lucide-react';
+import { CheckCircle2, AlertCircle, Download } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Transactions', href: '#' },
@@ -54,6 +55,23 @@ export default function Import() {
                         </Alert>
                     )}
 
+                    <Card>
+                        <CardHeader className="pb-3">
+                            <CardTitle className="text-sm font-medium">Download Template</CardTitle>
+                            <CardDescription className="text-xs">
+                                Use our Excel template to ensure your data is formatted correctly.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <Button variant="outline" size="sm" asChild>
+                                <a href="/downloads/Import-Template.xlsx" download>
+                                    <Download className="mr-2 h-4 w-4" />
+                                    Download Import-Template.xlsx
+                                </a>
+                            </Button>
+                        </CardContent>
+                    </Card>
+
                     <form onSubmit={submit} className="space-y-6">
                         <div className="grid gap-2">
                             <Label htmlFor="file">Transaction File</Label>
@@ -76,6 +94,61 @@ export default function Import() {
                             </Button>
                         </div>
                     </form>
+
+                    <Card className="mt-8">
+                        <CardHeader>
+                            <CardTitle className="text-base">Instructions</CardTitle>
+                            <CardDescription>
+                                Please follow these rules for each column in your import file.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-4 text-sm">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="space-y-1">
+                                        <p className="font-semibold text-primary">1. Date</p>
+                                        <p className="text-muted-foreground">Required. Format: YYYY-MM-DD or MM/DD/YYYY.</p>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="font-semibold text-primary">2. Description</p>
+                                        <p className="text-muted-foreground">Required. A brief description of the transaction.</p>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="font-semibold text-primary">3. Amount</p>
+                                        <p className="text-muted-foreground">Required. Numeric value (e.g., 1234.56). Symbols like $ and commas are automatically removed.</p>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="font-semibold text-primary">4. Type</p>
+                                        <p className="text-muted-foreground">Required. Must be "income" or "expense" (case-insensitive).</p>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="font-semibold text-primary">5. Project</p>
+                                        <p className="text-muted-foreground">Required. Must be a valid 3-character project code.</p>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="font-semibold text-primary">6. Project Step</p>
+                                        <p className="text-muted-foreground">Required. Must be a valid 3-character project step code.</p>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="font-semibold text-primary">7. Transaction Category</p>
+                                        <p className="text-muted-foreground">Required. Must be a valid 3-character category code.</p>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="font-semibold text-primary">8. Payment Method</p>
+                                        <p className="text-muted-foreground">Required. Must match an active payment method name (e.g., Cash, Bank Transfer).</p>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="font-semibold text-primary">9. Reference</p>
+                                        <p className="text-muted-foreground">Optional. Any reference number or notes for the transaction.</p>
+                                    </div>
+                                </div>
+                                <div className="mt-4 rounded-md bg-muted p-3 text-xs">
+                                    <p className="font-semibold mb-1">Note:</p>
+                                    <p>The import process uses the first 8-9 columns in the specified order. Any additional columns will be ignored. If validation fails for any row, the entire import will be rolled back.</p>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
 
                     {importErrors && importErrors.length > 0 && (
                         <div className="space-y-4 mt-8">
