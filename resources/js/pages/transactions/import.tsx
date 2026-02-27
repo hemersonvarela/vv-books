@@ -45,7 +45,7 @@ export default function Import() {
                         description="Upload an Excel (.xlsx, .xls) or CSV file to import transactions."
                     />
 
-                    {form.wasSuccessful && (
+                    {form.wasSuccessful && !importErrors.length && (
                         <Alert className="bg-green-50 text-green-700 border-green-200">
                             <CheckCircle2 className="h-4 w-4" />
                             <AlertTitle>Success</AlertTitle>

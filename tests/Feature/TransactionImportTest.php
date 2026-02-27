@@ -99,6 +99,7 @@ test('it successfully imports valid transactions', function () {
     ]);
 
     $response->assertRedirect(route('projects.index'));
+    $response->assertSessionHas('success');
     $this->assertDatabaseHas('transactions', [
         'description' => 'Test Transaction',
         'type' => 'income',
@@ -179,4 +180,38 @@ test('it generates consecutive codes during import', function () {
 
     $this->assertDatabaseHas('transactions', ['description' => 'T1', 'code' => 'ABC-S01-1']);
     $this->assertDatabaseHas('transactions', ['description' => 'T2', 'code' => 'ABC-S01-2']);
+});
+
+test('it rejects duplicate rows in the same file', function () {
+    $user = User::factory()->create();
+
+    Project::factory()->create(['code' => 'ABC']);
+    ProjectStep::factory()->create(['code' => 'S01']);
+    TransactionCategory::factory()->create(['code' => 'C01']);
+    PaymentMethod::factory()->create(['name' => 'Cash']);
+
+    $content = "date,description,amount,type,project,project_step,transaction_category,payment_method,reference\n";
+    $content .= "2026-02-26,Duplicate,100,income,ABC,S01,C01,Cash,\n";
+    $content .= "2026-02-26,Duplicate,100,income,ABC,S01,C01,Cash,\n";
+
+    $file = UploadedFile::fake()->createWithContent('transactions.csv', $content);
+
+    $response = $this->actingAs($user)->post(route('transactions.import.store'), [
+        'file' => $file,
+    ]);
+
+    $response->assertSessionHas('import_errors');
+    $errors = session('import_errors');
+
+    // Row 2 is index 0 (header is 1), Row 3 is index 1
+    // Maatwebsite Excel row numbers: Header is 1, first data row is 2.
+    // Row 3 should be the duplicate.
+    $duplicateError = collect($errors)->firstWhere('row', 3);
+    expect($duplicateError['errors'])->toContain('Duplicate row detected.');
+
+    // Verify nothing was imported
+    $this->assertDatabaseMissing('transactions', ['description' => 'Duplicate']);
+
+    // Check that success message is NOT in flash
+    $response->assertSessionMissing('success');
 });

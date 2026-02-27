@@ -23,6 +23,8 @@ class TransactionsImport implements SkipsEmptyRows, ToModel, WithHeadingRow, Wit
 
     private array $paymentMethods;
 
+    private array $processedRows = [];
+
     private array $consecutiveNumbers = [];
 
     public function __construct()
@@ -115,6 +117,12 @@ class TransactionsImport implements SkipsEmptyRows, ToModel, WithHeadingRow, Wit
                 }
             }],
             'reference' => ['nullable'],
+            'row_signature' => [function ($attribute, $value, $fail) {
+                if (in_array($value, $this->processedRows)) {
+                    $fail('Duplicate row detected.');
+                }
+                $this->processedRows[] = $value;
+            }],
         ];
     }
 
@@ -140,5 +148,24 @@ class TransactionsImport implements SkipsEmptyRows, ToModel, WithHeadingRow, Wit
         } catch (\Exception $e) {
             return $value;
         }
+    }
+
+    public function prepareForValidation(array $data, int $index): array
+    {
+        $signature = md5(json_encode([
+            $data['date'] ?? '',
+            $data['description'] ?? '',
+            $data['amount'] ?? '',
+            $data['type'] ?? '',
+            $data['project'] ?? '',
+            $data['project_step'] ?? '',
+            $data['transaction_category'] ?? '',
+            $data['payment_method'] ?? '',
+            $data['reference'] ?? '',
+        ]));
+
+        $data['row_signature'] = $signature;
+
+        return $data;
     }
 }
