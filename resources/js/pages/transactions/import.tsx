@@ -65,7 +65,7 @@ export default function Import() {
                                 required
                             />
                             <p className="text-xs text-muted-foreground">
-                                Max file size: 10MB. Accepted formats: .xlsx, .xls, .csv. Must have exactly 8 columns.
+                                Max file size: 10MB. Accepted formats: .xlsx, .xls, .csv.
                             </p>
                             <InputError message={form.errors.file} />
                         </div>

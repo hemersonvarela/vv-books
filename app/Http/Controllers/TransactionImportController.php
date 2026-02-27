@@ -25,11 +25,11 @@ class TransactionImportController extends Controller
 
         $file = $request->file('file');
 
-        // Column Count Validation (Exactly 8 columns)
+        // Column validation - any extra columns will be ignored by the Importer
         try {
             $data = Excel::toArray([], $file);
-            if (empty($data) || count($data[0][0]) !== 8) {
-                return back()->withErrors(['file' => 'The file must contain exactly 8 columns.']);
+            if (empty($data)) {
+                return back()->withErrors(['file' => 'The file is empty.']);
             }
         } catch (\Exception $e) {
             return back()->withErrors(['file' => 'Unable to read the file. Please ensure it is a valid Excel or CSV file.']);

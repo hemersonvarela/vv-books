@@ -17,12 +17,18 @@ test('import page is accessible for authenticated users', function () {
     $response->assertStatus(200);
 });
 
-test('it rejects file with wrong column count', function () {
+test('it accepts file with more than 8 columns', function () {
     $user = User::factory()->create();
 
-    // Create a CSV with 7 columns instead of 8
-    $content = "Date,Description,Amount,Project,Project Step,Transaction Category,Payment Method\n";
-    $content .= "2026-02-26,Test,100,PRJ,STP,CAT,Cash\n";
+    // Setup required data
+    Project::factory()->create(['code' => 'ABC']);
+    ProjectStep::factory()->create(['code' => 'S01']);
+    TransactionCategory::factory()->create(['code' => 'C01']);
+    PaymentMethod::factory()->create(['name' => 'Cash']);
+
+    // Create a CSV with 9 columns (1 extra)
+    $content = "date,description,amount,project,project_step,transaction_category,payment_method,reference,extra_column\n";
+    $content .= "2026-02-26,Test Transaction,123.45,ABC,S01,C01,Cash,REF123,Extra Value\n";
 
     $file = UploadedFile::fake()->createWithContent('transactions.csv', $content);
 
@@ -30,7 +36,12 @@ test('it rejects file with wrong column count', function () {
         'file' => $file,
     ]);
 
-    $response->assertSessionHasErrors(['file' => 'The file must contain exactly 8 columns.']);
+    $response->assertRedirect(route('projects.index'));
+    $this->assertDatabaseHas('transactions', [
+        'description' => 'Test Transaction',
+        'amount' => 123.45,
+        'reference' => 'REF123',
+    ]);
 });
 
 test('it rejects file with wrong extension', function () {
