@@ -162,7 +162,7 @@ export default function Import() {
                                 </div>
                                 <div className="mt-4 rounded-md bg-muted p-3 text-xs">
                                     <p className="font-semibold mb-1">Note:</p>
-                                    <p>The import process uses the first 8-9 columns in the specified order. Any additional columns will be ignored. If validation fails for any row, the entire import will be rolled back.</p>
+                                    <p>The import process uses the first 8-9 columns in the specified order. Any additional columns will be ignored. If validation fails for any row (including duplicates or transactions already in the database), the entire import will be rolled back.</p>
                                 </div>
                             </div>
                         </CardContent>

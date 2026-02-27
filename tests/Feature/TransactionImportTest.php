@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\PaymentMethod;
 use App\Models\Project;
 use App\Models\ProjectStep;
+use App\Models\Transaction;
 use App\Models\TransactionCategory;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -214,4 +215,46 @@ test('it rejects duplicate rows in the same file', function () {
 
     // Check that success message is NOT in flash
     $response->assertSessionMissing('success');
+});
+
+test('it rejects rows that already exist in the database', function () {
+    $user = User::factory()->create();
+
+    $project = Project::factory()->create(['code' => 'ABC']);
+    $step = ProjectStep::factory()->create(['code' => 'S01']);
+    $category = TransactionCategory::factory()->create(['code' => 'C01']);
+    $paymentMethod = PaymentMethod::factory()->create(['name' => 'Cash']);
+
+    // Create a transaction in the database
+    Transaction::create([
+        'date' => '2026-02-26',
+        'description' => 'Existing',
+        'amount' => 100.00,
+        'type' => 'income',
+        'project_id' => $project->id,
+        'project_step_id' => $step->id,
+        'category_id' => $category->id,
+        'payment_method_id' => $paymentMethod->id,
+        'reference' => 'REF-EXISTING',
+        'code' => 'ABC-S01-1',
+    ]);
+
+    // Try to import the same transaction
+    $content = "date,description,amount,type,project,project_step,transaction_category,payment_method,reference\n";
+    $content .= "2026-02-26,Existing,100,income,ABC,S01,C01,Cash,REF-EXISTING\n";
+
+    $file = UploadedFile::fake()->createWithContent('transactions.csv', $content);
+
+    $response = $this->actingAs($user)->post(route('transactions.import.store'), [
+        'file' => $file,
+    ]);
+
+    $response->assertSessionHas('import_errors');
+    $errors = session('import_errors');
+
+    $dbError = collect($errors)->firstWhere('row', 2);
+    expect($dbError['errors'])->toContain('This transaction already exists in the database.');
+
+    // Verify no new transactions were created
+    expect(Transaction::count())->toBe(1);
 });

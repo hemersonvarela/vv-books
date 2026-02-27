@@ -120,8 +120,15 @@ class TransactionsImport implements SkipsEmptyRows, ToModel, WithHeadingRow, Wit
             'row_signature' => [function ($attribute, $value, $fail) {
                 if (in_array($value, $this->processedRows)) {
                     $fail('Duplicate row detected.');
+
+                    return;
                 }
                 $this->processedRows[] = $value;
+            }],
+            'database_check' => [function ($attribute, $value, $fail) {
+                if ($value) {
+                    $fail('This transaction already exists in the database.');
+                }
             }],
         ];
     }
@@ -165,6 +172,19 @@ class TransactionsImport implements SkipsEmptyRows, ToModel, WithHeadingRow, Wit
         ]));
 
         $data['row_signature'] = $signature;
+
+        // Database duplicate check
+        $date = $this->transformDate($data['date'] ?? '');
+        $data['database_check'] = Transaction::whereDate('date', $date instanceof \DateTime ? $date : \Carbon\Carbon::parse($date))
+            ->where('description', $data['description'] ?? '')
+            ->where('amount', $this->sanitizeAmount($data['amount'] ?? 0))
+            ->where('type', strtolower($data['type'] ?? ''))
+            ->where('project_id', $this->projects[strtoupper($data['project'] ?? '')] ?? null)
+            ->where('project_step_id', $this->steps[strtoupper($data['project_step'] ?? '')] ?? null)
+            ->where('category_id', $this->categories[strtoupper($data['transaction_category'] ?? '')] ?? null)
+            ->where('payment_method_id', $this->paymentMethods[$data['payment_method'] ?? ''] ?? null)
+            ->where('reference', $data['reference'] ?? null)
+            ->exists();
 
         return $data;
     }
