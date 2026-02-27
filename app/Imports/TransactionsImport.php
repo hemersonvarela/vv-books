@@ -55,7 +55,7 @@ class TransactionsImport implements SkipsEmptyRows, ToModel, WithHeadingRow, Wit
             'category_id' => $this->categories[strtoupper($row['transaction_category'])],
             'payment_method_id' => $this->paymentMethods[$row['payment_method']],
             'reference' => $row['reference'] ?? null,
-            'type' => $amount >= 0 ? 'income' : 'expense',
+            'type' => strtolower($row['type']),
             'code' => "{$projectCode}-{$stepCode}-{$nextNumber}",
         ]);
     }
@@ -91,6 +91,11 @@ class TransactionsImport implements SkipsEmptyRows, ToModel, WithHeadingRow, Wit
             'date' => ['required'],
             'description' => ['required', 'string'],
             'amount' => ['required'],
+            'type' => ['required', function ($attribute, $value, $fail) {
+                if (! in_array(strtolower($value), ['income', 'expense'])) {
+                    $fail('The selected type is invalid.');
+                }
+            }],
             'project' => ['required', 'string', 'min:1', 'max:3', function ($attribute, $value, $fail) {
                 if (! isset($this->projects[strtoupper($value)])) {
                     $fail("Project code '{$value}' not found.");
