@@ -47,7 +47,7 @@ class TransactionFactory extends Factory
             'date' => fake()->date(),
             'amount' => fake()->randomFloat(2, 1, 20000),
             'type' => fake()->randomElement(['income', 'expense']),
-            'description' => fake()->optional()->sentence(),
+            'description' => fake()->sentence(),
             'reference' => fake()->optional()->bothify('REF-#####'),
             'verified_at' => fake()->optional()->date(),
         ];

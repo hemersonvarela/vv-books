@@ -24,7 +24,7 @@ return new class extends Migration
             $table->date('date');
             $table->decimal('amount', 12, 2);
             $table->enum('type', ['income', 'expense']);
-            $table->text('description')->nullable();
+            $table->string('description');
             $table->string('reference')->nullable();
             $table->text('notes')->nullable();
             $table->date('verified_at')->nullable();

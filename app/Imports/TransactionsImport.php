@@ -89,7 +89,7 @@ class TransactionsImport implements SkipsEmptyRows, ToModel, WithHeadingRow, Wit
     {
         return [
             'date' => ['required'],
-            'description' => ['required', 'string'],
+            'description' => ['required', 'string', 'max:255'],
             'amount' => ['required'],
             'type' => ['required', function ($attribute, $value, $fail) {
                 if (! in_array(strtolower($value), ['income', 'expense'])) {

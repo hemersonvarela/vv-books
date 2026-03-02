@@ -12,6 +12,7 @@ it('allows authenticated users to do project crud', function () {
 
     $this->actingAs($user)
         ->post('/projects', [
+            'code' => 'P01',
             'name' => 'Project One',
             'description' => 'Description for project one',
             'start_date' => '2026-01-01',
@@ -25,6 +26,7 @@ it('allows authenticated users to do project crud', function () {
 
     $this->actingAs($user)
         ->put("/projects/{$project->id}", [
+            'code' => 'P01',
             'name' => 'Project One Updated',
             'description' => 'Updated description',
             'start_date' => '2026-01-01',
