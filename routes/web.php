@@ -5,6 +5,7 @@ use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectStepController;
 use App\Http\Controllers\TransactionCategoryController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TransactionImportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
@@ -32,6 +33,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('project-steps', ProjectStepController::class)->except(['show']);
     Route::resource('projects', ProjectController::class)->except(['show']);
     Route::resource('transaction-categories', TransactionCategoryController::class)->except(['show']);
+    Route::resource('transactions', TransactionController::class)->except(['show']);
 
     Route::get('transactions/import', [TransactionImportController::class, 'index'])->name('transactions.import.index');
     Route::post('transactions/import', [TransactionImportController::class, 'store'])->name('transactions.import.store');

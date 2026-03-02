@@ -66,6 +66,11 @@ const mainNavItems: NavItem[] = [
         icon: Folder,
     },
     {
+        title: 'Transactions',
+        href: transactions.index(),
+        icon: List,
+    },
+    {
         title: 'Import Transactions',
         href: transactions.import.index(),
         icon: List,

@@ -72,4 +72,29 @@ class Transaction extends Model
     {
         return $this->hasMany(TransactionAttachment::class);
     }
+
+    public static function generateCode(int $projectId, int $stepId): string
+    {
+        $project = Project::findOrFail($projectId);
+        $step = ProjectStep::findOrFail($stepId);
+
+        $projectCode = strtoupper($project->code);
+        $stepCode = strtoupper($step->code);
+
+        $lastCode = self::where('project_id', $projectId)
+            ->where('project_step_id', $stepId)
+            ->where('code', 'like', "{$projectCode}-{$stepCode}-%")
+            ->orderByRaw('CAST(SUBSTRING_INDEX(code, "-", -1) AS UNSIGNED) DESC')
+            ->value('code');
+
+        if ($lastCode) {
+            $parts = explode('-', $lastCode);
+            $lastNumber = (int) end($parts);
+            $nextNumber = $lastNumber + 1;
+        } else {
+            $nextNumber = 1;
+        }
+
+        return "{$projectCode}-{$stepCode}-{$nextNumber}";
+    }
 }
