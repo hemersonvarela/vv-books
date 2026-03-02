@@ -56,7 +56,6 @@ export default function Edit({
         form.put(`/transactions/${transaction.id}`);
     }
 
-    // const filteredSteps = steps.filter(step => step.project_id === parseInt(form.data.project_id));
     const filteredCategories = categories.filter(category => category.type === form.data.type);
 
     return (

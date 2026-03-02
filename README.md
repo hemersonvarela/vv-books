@@ -9,6 +9,9 @@ sail artisan test
 
 sail npm run dev   
 
+logs()->info('Import validation errors: '.json_encode($errors));
+
+
 /**
 # /Users/hemerson/htdocs/apps/vv-books/.vscode/mcp.json
 {

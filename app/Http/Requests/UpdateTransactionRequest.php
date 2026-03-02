@@ -38,4 +38,16 @@ class UpdateTransactionRequest extends FormRequest
             'notes' => ['nullable', 'string'],
         ];
     }
+
+    /**
+     * Normalize select values before validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        foreach (['partner_id', 'contractor_id', 'vendor_id'] as $key) {
+            if ($this->input($key) === 'none') {
+                $this->merge([$key => null]);
+            }
+        }
+    }
 }
