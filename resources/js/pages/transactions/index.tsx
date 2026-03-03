@@ -103,7 +103,7 @@ export default function Index({ transactions }: any) {
                     </table>
                 </div>
 
-                {/*<Pagination links={transactions.links} />*/}
+                <Pagination links={transactions.meta.links} />
             </div>
         </AppLayout>
     );
