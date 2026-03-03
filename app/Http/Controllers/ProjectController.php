@@ -65,9 +65,23 @@ class ProjectController extends Controller
             ->latest('date')
             ->get();
 
+        // Calculate net total
+        $incomeTotal = $transactions
+            ->filter(fn($t) => $t->type === 'income')
+            ->sum('amount');
+
+        $expenseTotal = $transactions
+            ->filter(fn($t) => $t->type === 'expense')
+            ->sum('amount');
+
+        $netTotal = $incomeTotal - $expenseTotal;
+
         return Inertia::render('projects/transactions', [
             'project' => (new ProjectResource($project))->resolve(),
             'transactions' => new TransactionCollection($transactions),
+            'totals' => [
+                'net' => number_format($netTotal, 2),
+            ],
         ]);
     }
 

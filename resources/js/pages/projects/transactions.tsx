@@ -3,23 +3,12 @@ import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { Button } from '@/components/ui/button';
 
-export default function ProjectTransactions({ project, transactions }: any) {
+export default function ProjectTransactions({ project, transactions, totals }: any) {
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Projects', href: '/projects' },
         { title: project.name, href: `/projects/${project.id}/edit` },
         { title: 'Transactions', href: '#' },
     ];
-
-    // Calculate totals
-    const incomeTotal = transactions.data
-        .filter((t: any) => t.type === 'income')
-        .reduce((sum: number, t: any) => sum + parseFloat(t.amount_formatted.replace(/,/g, '')), 0);
-
-    const expenseTotal = transactions.data
-        .filter((t: any) => t.type === 'expense')
-        .reduce((sum: number, t: any) => sum + parseFloat(t.amount_formatted.replace(/,/g, '')), 0);
-
-    const netTotal = incomeTotal - expenseTotal;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -105,17 +94,14 @@ export default function ProjectTransactions({ project, transactions }: any) {
                             {transactions.data.length > 0 && (
                                 <tr className="bg-muted font-semibold">
                                     <td colSpan={4} className="px-4 py-3 text-right">
-                                        Totals:
+                                        Total Project:
                                     </td>
-                                    <td className="px-4 py-3">
-                                        <div className="text-right space-y-1">
-
-                                            <div className={netTotal >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
-                                               ${netTotal.toFixed(2)}
-                                            </div>
+                                    <td className="px-4 py-3 text-right">
+                                        <div className={parseFloat(totals.net) >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
+                                            ${totals.net}
                                         </div>
                                     </td>
-                                    <td colSpan={2}></td>
+                                    <td colSpan={1}></td>
                                 </tr>
                             )}
                         </tbody>
