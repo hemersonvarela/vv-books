@@ -11,13 +11,13 @@ export default function ProjectTransactions({ project, transactions }: any) {
     ];
 
     // Calculate totals
-    const incomeTotal = transactions
+    const incomeTotal = transactions.data
         .filter((t: any) => t.type === 'income')
-        .reduce((sum: number, t: any) => sum + parseFloat(t.amount), 0);
+        .reduce((sum: number, t: any) => sum + parseFloat(t.amount_formatted.replace(/,/g, '')), 0);
 
-    const expenseTotal = transactions
+    const expenseTotal = transactions.data
         .filter((t: any) => t.type === 'expense')
-        .reduce((sum: number, t: any) => sum + parseFloat(t.amount), 0);
+        .reduce((sum: number, t: any) => sum + parseFloat(t.amount_formatted.replace(/,/g, '')), 0);
 
     const netTotal = incomeTotal - expenseTotal;
 
@@ -50,15 +50,15 @@ export default function ProjectTransactions({ project, transactions }: any) {
                             </tr>
                         </thead>
                         <tbody className="bg-background divide-y">
-                            {transactions.map((transaction: any) => (
+                            {transactions.data.map((transaction: any) => (
                                 <tr key={transaction.id} className="hover:bg-muted/50 transition-colors">
-                                    <td className="px-4 py-2 whitespace-nowrap">{transaction.date}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap">{transaction.date_formatted}</td>
                                     <td className="px-4 py-2 whitespace-nowrap font-mono text-xs">{transaction.code}</td>
-                                    <td className="px-4 py-2 text-sm">{transaction.step?.name || '-'}</td>
+                                    <td className="px-4 py-2 text-sm">{transaction.step || '-'}</td>
                                     <td className="px-4 py-2">
                                         <div className="text-sm line-clamp-1">{transaction.description}</div>
                                         {transaction.category && (
-                                            <div className="text-xs text-muted-foreground">{transaction.category.name}</div>
+                                            <div className="text-xs text-muted-foreground">{transaction.category}</div>
                                         )}
                                     </td>
                                     <td className="px-4 py-2 text-right whitespace-nowrap">
@@ -69,7 +69,7 @@ export default function ProjectTransactions({ project, transactions }: any) {
                                                     : 'text-red-600 dark:text-red-400'
                                             }
                                         >
-                                            {transaction.type === 'expense' ? '-' : ''}${parseFloat(transaction.amount).toFixed(2)}
+                                            {transaction.type === 'expense' ? '-' : ''}${transaction.amount_formatted}
                                         </span>
                                     </td>
                                     <td className="px-4 py-2 text-center whitespace-nowrap">
@@ -107,14 +107,14 @@ export default function ProjectTransactions({ project, transactions }: any) {
                                     </td>
                                 </tr>
                             ))}
-                            {transactions.length === 0 && (
+                            {transactions.data.length === 0 && (
                                 <tr>
                                     <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
                                         No transactions found.
                                     </td>
                                 </tr>
                             )}
-                            {transactions.length > 0 && (
+                            {transactions.data.length > 0 && (
                                 <tr className="bg-muted font-semibold">
                                     <td colSpan={4} className="px-4 py-3 text-right">
                                         Totals:

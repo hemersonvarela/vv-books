@@ -6,6 +6,7 @@ use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Resources\ProjectCollection;
 use App\Http\Resources\ProjectResource;
+use App\Http\Resources\TransactionCollection;
 use App\Models\Project;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -66,7 +67,7 @@ class ProjectController extends Controller
 
         return Inertia::render('projects/transactions', [
             'project' => (new ProjectResource($project))->resolve(),
-            'transactions' => $transactions,
+            'transactions' => new TransactionCollection($transactions),
         ]);
     }
 
