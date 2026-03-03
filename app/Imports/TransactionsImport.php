@@ -25,8 +25,6 @@ class TransactionsImport implements SkipsEmptyRows, ToModel, WithHeadingRow, Wit
 
     private array $processedRows = [];
 
-    private array $consecutiveNumbers = [];
-
     public function __construct()
     {
         $this->projects = Project::pluck('id', 'code')->toArray();
@@ -38,13 +36,8 @@ class TransactionsImport implements SkipsEmptyRows, ToModel, WithHeadingRow, Wit
     public function model(array $row): ?Transaction
     {
         $amount = $this->sanitizeAmount($row['amount']);
-        $projectCode = strtoupper($row['project']);
-        $stepCode = strtoupper($row['project_step']);
-
-        $projectId = $this->projects[$projectCode];
-        $stepId = $this->steps[$stepCode];
-
-        $nextNumber = $this->getNextNumber($projectId, $stepId, $projectCode, $stepCode);
+        $projectId = $this->projects[strtoupper($row['project'])];
+        $stepId = $this->steps[strtoupper($row['project_step'])];
 
         return new Transaction([
             'date' => $this->transformDate($row['date']),
@@ -56,33 +49,8 @@ class TransactionsImport implements SkipsEmptyRows, ToModel, WithHeadingRow, Wit
             'payment_method_id' => $this->paymentMethods[$row['payment_method']],
             'reference' => $row['reference'] ?? null,
             'type' => strtolower($row['type']),
-            'code' => "{$projectCode}-{$stepCode}-{$nextNumber}",
+            'code' => Transaction::generateCode($projectId, $stepId),
         ]);
-    }
-
-    private function getNextNumber(int $projectId, int $stepId, string $projectCode, string $stepCode): int
-    {
-        $key = "{$projectId}-{$stepId}";
-
-        if (! isset($this->consecutiveNumbers[$key])) {
-            $lastCode = Transaction::where('project_id', $projectId)
-                ->where('project_step_id', $stepId)
-                ->where('code', 'like', "{$projectCode}-{$stepCode}-%")
-                ->orderByRaw('CAST(SUBSTRING_INDEX(code, "-", -1) AS UNSIGNED) DESC')
-                ->value('code');
-
-            if ($lastCode) {
-                $parts = explode('-', $lastCode);
-                $lastNumber = (int) end($parts);
-                $this->consecutiveNumbers[$key] = $lastNumber + 1;
-            } else {
-                $this->consecutiveNumbers[$key] = 1;
-            }
-        } else {
-            $this->consecutiveNumbers[$key]++;
-        }
-
-        return $this->consecutiveNumbers[$key];
     }
 
     public function rules(): array
