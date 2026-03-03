@@ -1,14 +1,25 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Pagination from '@/components/pagination';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Transactions', href: '/transactions' },
 ];
 
-export default function Index({ transactions }: any) {
+export default function Index({ transactions, projects, filters }: any) {
+    const handleFilterChange = (key: string, value: string) => {
+        const newFilters = {
+            ...filters,
+            [key]: value === 'all' ? '' : value,
+        };
+        router.visit('/transactions', {
+            data: newFilters,
+            preserveScroll: true,
+        });
+    };
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Transactions" />
@@ -17,12 +28,51 @@ export default function Index({ transactions }: any) {
                 <div className="mb-4 flex justify-between items-center">
                     <h1 className="text-xl font-semibold">Transactions</h1>
                     <div className="flex gap-2">
-                         <Button asChild variant="outline">
+                        <Button asChild variant="outline">
                             <Link href="/transactions/import">Import Transactions</Link>
                         </Button>
                         <Button asChild>
                             <Link href="/transactions/create">Create Transaction</Link>
                         </Button>
+                    </div>
+                </div>
+
+                <div className="mb-4 flex gap-4 items-end">
+                    <div className="w-48">
+                        <label className="text-xs font-medium text-muted-foreground uppercase">Filter by Project</label>
+                        <Select
+                            value={filters?.project_id ? filters.project_id.toString() : 'all'}
+                            onValueChange={(value) => handleFilterChange('project_id', value)}
+                        >
+                            <SelectTrigger>
+                                <SelectValue placeholder="All Projects" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Projects</SelectItem>
+                                {projects.map((project: any) => (
+                                    <SelectItem key={project.id} value={project.id.toString()}>
+                                        {project.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div className="w-48">
+                        <label className="text-xs font-medium text-muted-foreground uppercase">Verification Status</label>
+                        <Select
+                            value={filters?.verified_status || 'all'}
+                            onValueChange={(value) => handleFilterChange('verified_status', value)}
+                        >
+                            <SelectTrigger>
+                                <SelectValue placeholder="All Statuses" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Statuses</SelectItem>
+                                <SelectItem value="verified">Verified</SelectItem>
+                                <SelectItem value="unverified">Unverified</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                 </div>
 
@@ -103,7 +153,7 @@ export default function Index({ transactions }: any) {
                     </table>
                 </div>
 
-                <Pagination links={transactions.meta.links} />
+                <Pagination links={transactions.meta.links ?? []} />
             </div>
         </AppLayout>
     );

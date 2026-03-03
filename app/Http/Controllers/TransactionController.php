@@ -22,13 +22,30 @@ class TransactionController extends Controller
 {
     public function index(): InertiaResponse
     {
-        $transactions = Transaction::query()
-            ->with(['project', 'step', 'category', 'paymentMethod'])
-            ->latest('id')
-            ->paginate(10);
+        $query = Transaction::query()
+            ->with(['project', 'step', 'category', 'paymentMethod']);
+
+        // Filter by project
+        if (request('project_id')) {
+            $query->where('project_id', request('project_id'));
+        }
+
+        // Filter by verified status
+        if (request('verified_status') === 'unverified') {
+            $query->whereNull('verified_at');
+        } elseif (request('verified_status') === 'verified') {
+            $query->whereNotNull('verified_at');
+        }
+
+        $transactions = $query->latest('id')->paginate(10);
 
         return Inertia::render('transactions/index', [
             'transactions' => new TransactionCollection($transactions),
+            'projects' => Project::all(['id', 'name']),
+            'filters' => [
+                'project_id' => request('project_id'),
+                'verified_status' => request('verified_status'),
+            ],
         ]);
     }
 
