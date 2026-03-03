@@ -62,7 +62,10 @@ class ProjectController extends Controller
     {
         $transactions = $project->transactions()
             ->with(['project', 'step', 'category', 'paymentMethod', 'partner', 'contractor', 'vendor'])
-            ->latest('date')
+            ->leftJoin('project_steps', 'transactions.project_step_id', '=', 'project_steps.id')
+            ->orderBy('project_steps.step_order', 'asc')
+            ->orderBy('transactions.code', 'asc')
+            ->select('transactions.*')
             ->get();
 
         // Calculate net total
