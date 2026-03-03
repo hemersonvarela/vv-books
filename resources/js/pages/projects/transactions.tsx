@@ -40,20 +40,19 @@ export default function ProjectTransactions({ project, transactions }: any) {
                     <table className="min-w-full divide-y">
                         <thead className="bg-muted/50">
                             <tr>
-                                <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">Date</th>
                                 <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">Code</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">Date</th>
                                 <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">Step</th>
                                 <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">Description</th>
                                 <th className="px-4 py-2 text-right text-xs font-medium uppercase tracking-wider">Amount</th>
-                                <th className="px-4 py-2 text-center text-xs font-medium uppercase tracking-wider">Type</th>
                                 <th className="px-4 py-2 text-center text-xs font-medium uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="bg-background divide-y">
                             {transactions.data.map((transaction: any) => (
                                 <tr key={transaction.id} className="hover:bg-muted/50 transition-colors">
-                                    <td className="px-4 py-2 whitespace-nowrap">{transaction.date_formatted}</td>
                                     <td className="px-4 py-2 whitespace-nowrap font-mono text-xs">{transaction.code}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap">{transaction.date_formatted}</td>
                                     <td className="px-4 py-2 text-sm">{transaction.step || '-'}</td>
                                     <td className="px-4 py-2">
                                         <div className="text-sm line-clamp-1">{transaction.description}</div>
@@ -70,17 +69,6 @@ export default function ProjectTransactions({ project, transactions }: any) {
                                             }
                                         >
                                             {transaction.type === 'expense' ? '-' : ''}${transaction.amount_formatted}
-                                        </span>
-                                    </td>
-                                    <td className="px-4 py-2 text-center whitespace-nowrap">
-                                        <span
-                                            className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                                                transaction.type === 'income'
-                                                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                                                    : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-                                            }`}
-                                        >
-                                            {transaction.type}
                                         </span>
                                     </td>
                                     <td className="px-4 py-2">
@@ -109,7 +97,7 @@ export default function ProjectTransactions({ project, transactions }: any) {
                             ))}
                             {transactions.data.length === 0 && (
                                 <tr>
-                                    <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
+                                    <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
                                         No transactions found.
                                     </td>
                                 </tr>
@@ -121,14 +109,9 @@ export default function ProjectTransactions({ project, transactions }: any) {
                                     </td>
                                     <td className="px-4 py-3">
                                         <div className="text-right space-y-1">
-                                            <div className="text-green-600 dark:text-green-400">
-                                                Income: ${incomeTotal.toFixed(2)}
-                                            </div>
-                                            <div className="text-red-600 dark:text-red-400">
-                                                Expense: ${expenseTotal.toFixed(2)}
-                                            </div>
+
                                             <div className={netTotal >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
-                                                Net: ${netTotal.toFixed(2)}
+                                               ${netTotal.toFixed(2)}
                                             </div>
                                         </div>
                                     </td>
