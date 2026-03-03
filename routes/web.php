@@ -3,6 +3,7 @@
 use App\Http\Controllers\ContractorController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PartnerController;
+use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectStepController;
 use App\Http\Controllers\TransactionCategoryController;
@@ -34,6 +35,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('project-steps', ProjectStepController::class)->except(['show']);
     Route::resource('projects', ProjectController::class)->except(['show']);
     Route::resource('transaction-categories', TransactionCategoryController::class)->except(['show']);
+    Route::resource('payment-methods', PaymentMethodController::class)->except(['show']);
     Route::resource('transactions', TransactionController::class)->except(['show']);
 
     Route::get('transactions/import', [TransactionImportController::class, 'index'])->name('transactions.import.index');
