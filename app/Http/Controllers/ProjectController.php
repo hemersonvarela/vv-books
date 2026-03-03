@@ -56,4 +56,27 @@ class ProjectController extends Controller
 
         return redirect()->route('projects.index');
     }
+
+    public function transactions(Project $project): InertiaResponse
+    {
+        $transactions = $project->transactions()
+            ->with(['project', 'step', 'category', 'paymentMethod', 'partner', 'contractor', 'vendor'])
+            ->latest('date')
+            ->get();
+
+        return Inertia::render('projects/transactions', [
+            'project' => (new ProjectResource($project))->resolve(),
+            'transactions' => $transactions,
+        ]);
+    }
+
+    public function getActive()
+    {
+        $projects = Project::query()
+            ->where('status', true)
+            ->orderBy('name')
+            ->get(['id', 'name']);
+
+        return response()->json($projects);
+    }
 }

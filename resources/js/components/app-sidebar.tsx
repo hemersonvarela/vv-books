@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { BookOpen, CreditCard, Folder, LayoutGrid, List, Settings, ShoppingCart, Store, Users } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -105,6 +106,55 @@ const mainNavItems: NavItem[] = [
 // ];
 
 export function AppSidebar() {
+    const [projects, setProjects] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchProjects = async () => {
+            try {
+                const response = await fetch('/api/projects/active', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'same-origin',
+                });
+
+                if (!response.ok) {
+                    console.error(`Failed to fetch projects: ${response.status} ${response.statusText}`);
+                    setLoading(false);
+                    return;
+                }
+
+                const data = await response.json();
+                setProjects(data);
+            } catch (error) {
+                console.error('Error fetching projects:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProjects();
+    }, []);
+
+    const navItems: NavItem[] = [
+        ...mainNavItems,
+        ...(projects.length > 0
+            ? [
+                  {
+                      title: 'Projects',
+                      icon: Folder,
+                      items: projects.map((project) => ({
+                          title: project.name,
+                          href: `/projects/${project.id}/transactions`,
+                      })),
+                  },
+              ]
+            : []),
+    ];
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -120,7 +170,7 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain items={navItems} />
             </SidebarContent>
 
             <SidebarFooter>

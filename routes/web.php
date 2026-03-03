@@ -34,6 +34,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('contractors', ContractorController::class)->except(['show']);
     Route::resource('project-steps', ProjectStepController::class)->except(['show']);
     Route::resource('projects', ProjectController::class)->except(['show']);
+    Route::get('projects/{project}/transactions', [ProjectController::class, 'transactions'])->name('projects.transactions');
+    Route::get('api/projects/active', [ProjectController::class, 'getActive'])->name('projects.active');
     Route::resource('transaction-categories', TransactionCategoryController::class)->except(['show']);
     Route::resource('payment-methods', PaymentMethodController::class)->except(['show']);
     Route::resource('transactions', TransactionController::class)->except(['show']);
