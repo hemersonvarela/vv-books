@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, CreditCard, Folder, LayoutGrid, List, Store, Users } from 'lucide-react';
+import { BookOpen, CreditCard, Folder, LayoutGrid, List, Settings, ShoppingCart, Store, Users } from 'lucide-react';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -32,54 +32,62 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Users',
-        href: usersIndex(),
-        icon: Users,
-    },
-    {
-        title: 'Vendors',
-        href: vendorsIndex(),
-        icon: Store,
-    },
-    {
-        title: 'Partners',
-        href: partnersIndex(),
-        icon: Users,
-    },
-    {
-        title: 'Project Steps',
-        href: projectStepsIndex(),
-        icon: BookOpen,
-    },
-    {
-        title: 'Transaction Categories',
-        href: transactionCategoriesIndex(),
-        icon: List,
-    },
-    {
-        title: 'Payment Methods',
-        href: paymentMethodsIndex(),
-        icon: CreditCard,
-    },
-    {
-        title: 'Contractors',
-        href: contractorsIndex(),
-        icon: Users,
-    },
-    {
-        title: 'Projects',
-        href: projectsIndex(),
-        icon: Folder,
+        title: 'Admin',
+        icon: Settings,
+        items: [
+            {
+                title: 'Projects',
+                href: projectsIndex(),
+                icon: Folder,
+            },            
+            {
+                title: 'Users',
+                href: usersIndex(),
+                icon: Users,
+            },
+            {
+                title: 'Partners',
+                href: partnersIndex(),
+                icon: Users,
+            },
+            {
+                title: 'Vendors',
+                href: vendorsIndex(),
+                icon: Store,
+            },      
+            {
+                title: 'Contractors',
+                href: contractorsIndex(),
+                icon: Users,
+            },                  
+            {
+                title: 'Project Steps',
+                href: projectStepsIndex(),
+                icon: BookOpen,
+            },
+            {
+                title: 'Payment Methods',
+                href: paymentMethodsIndex(),
+                icon: CreditCard,
+            },
+
+        ],
     },
     {
         title: 'Transactions',
-        href: transactions.index(),
         icon: List,
-    },
-    {
-        title: 'Import Transactions',
-        href: transactions.import.index(),
-        icon: List,
+        items: [
+            {
+                title: 'Transactions',
+                href: transactions.index(),
+                icon: List,
+            },
+            {
+                title: 'Import Transactions',
+                href: transactions.import.index(),
+                icon: List,
+            },
+        ],
     },
 ];
 
