@@ -25,6 +25,7 @@ class Transaction extends Model
         'description',
         'reference',
         'verified_at',
+        'notes',
     ];
 
     protected $casts = [
