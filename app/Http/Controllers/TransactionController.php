@@ -94,7 +94,8 @@ class TransactionController extends Controller
         if ($transaction->project_id != $validated['project_id'] || $transaction->project_step_id != $validated['project_step_id']) {
             $validated['code'] = Transaction::generateCode($validated['project_id'], $validated['project_step_id']);
         }
-
+        
+        $validated['verified_at'] = now();
         $transaction->update($validated);
 
         return redirect()->route('transactions.index');
