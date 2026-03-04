@@ -87,7 +87,7 @@ export default function ProjectTransactions({ project, transactions, partners, t
                                             </td>
                                             {partners.map((partner: any) => (
                                                 <td key={`tx-${transaction.id}-partner-${partner.id}`} className="px-4 py-2 text-right whitespace-nowrap">
-                                                    {transaction.partner_id === partner.id ? (
+                                                    {transaction.partner_id === partner.id && (
                                                         <span
                                                             className={
                                                                 transaction.type === 'income'
@@ -97,14 +97,12 @@ export default function ProjectTransactions({ project, transactions, partners, t
                                                         >
                                                             {transaction.type === 'expense' ? '-' : ''}${transaction.amount_formatted}
                                                         </span>
-                                                    ) : (
-                                                        '-'
                                                     )}
                                                 </td>
                                             ))}
                                             {hasUnclaimed && (
                                                 <td className="px-4 py-2 text-right whitespace-nowrap">
-                                                    {transaction.partner_id === null ? (
+                                                    {transaction.partner_id === null && (
                                                         <span
                                                             className={
                                                                 transaction.type === 'income'
@@ -114,8 +112,6 @@ export default function ProjectTransactions({ project, transactions, partners, t
                                                         >
                                                             {transaction.type === 'expense' ? '-' : ''}${transaction.amount_formatted}
                                                         </span>
-                                                    ) : (
-                                                        '-'
                                                     )}
                                                 </td>
                                             )}
