@@ -12,14 +12,8 @@ use App\Http\Controllers\TransactionImportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-use Laravel\Fortify\Features;
 
-Route::get('/', function () {
-    return Inertia::render('welcome', [
-        'canRegister' => Features::enabled(Features::registration()),
-    ]);
-})->name('home');
+Route::redirect('/', '/dashboard')->name('home');
 
 Route::get('dashboard', DashboardController::class)
     ->middleware(['auth', 'verified'])
