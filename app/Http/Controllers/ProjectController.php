@@ -68,13 +68,34 @@ class ProjectController extends Controller
             ->select('transactions.*')
             ->get();
 
+        // Get all partners associated with the project
+        $partners = $project->partners()
+            ->select('partners.id', 'partners.name')
+            ->orderBy('name')
+            ->get();
+
+        // Calculate totals by partner
+        $partnerTotals = [];
+        $unclaimedTotal = 0;
+
+        foreach ($partners as $partner) {
+            $partnerTotals[$partner->id] = $transactions
+                ->where('partner_id', $partner->id)
+                ->sum('amount');
+        }
+
+        // Calculate unclaimed (no partner) total
+        $unclaimedTotal = $transactions
+            ->whereNull('partner_id')
+            ->sum('amount');
+
         // Calculate net total
         $incomeTotal = $transactions
-            ->filter(fn($t) => $t->type === 'income')
+            ->filter(fn ($t) => $t->type === 'income')
             ->sum('amount');
 
         $expenseTotal = $transactions
-            ->filter(fn($t) => $t->type === 'expense')
+            ->filter(fn ($t) => $t->type === 'expense')
             ->sum('amount');
 
         $netTotal = $incomeTotal - $expenseTotal;
@@ -82,9 +103,15 @@ class ProjectController extends Controller
         return Inertia::render('projects/transactions', [
             'project' => (new ProjectResource($project))->resolve(),
             'transactions' => new TransactionCollection($transactions),
+            'partners' => $partners,
             'totals' => [
                 'net' => number_format($netTotal, 2),
             ],
+            'partnerTotals' => collect($partnerTotals)->mapWithKeys(function ($total, $partnerId) {
+                return [$partnerId => number_format($total, 2)];
+            })->toArray(),
+            'unclaimedTotal' => number_format($unclaimedTotal, 2),
+            'hasUnclaimed' => $unclaimedTotal != 0,
         ]);
     }
 

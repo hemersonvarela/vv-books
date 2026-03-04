@@ -15,7 +15,7 @@ class PartnerSeeder extends Seeder
         $seeds = [
             [
                 'id' => 1,
-                'name' => 'Sample Partner 1',
+                'name' => 'VV-Homes',
                 'email' => null,
                 'phone' => null,
                 'tax_id' => null,
@@ -23,7 +23,7 @@ class PartnerSeeder extends Seeder
             ],
             [
                 'id' => 2,
-                'name' => 'Sample Partner 2',
+                'name' => 'Jireh Construction',
                 'email' => null,
                 'phone' => null,
                 'tax_id' => null,

@@ -30,7 +30,7 @@ export default function Dashboard({ stats }: any) {
                     </Link>
                     <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border bg-card p-6 hover:shadow-md transition-shadow cursor-default">
                         <div className="flex flex-col h-full justify-between">
-                            <h3 className="text-sm font-medium text-muted-foreground">Transactions without Partner</h3>
+                            <h3 className="text-sm font-medium text-muted-foreground">Unclaimed Transactions</h3>
                             <div>
                                 <p className="text-3xl font-bold">{stats.no_partner_transactions}</p>
                                 <p className="text-xs text-muted-foreground mt-2">Need assignment</p>

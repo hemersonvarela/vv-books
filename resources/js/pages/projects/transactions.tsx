@@ -3,12 +3,18 @@ import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { Button } from '@/components/ui/button';
 
-export default function ProjectTransactions({ project, transactions, totals }: any) {
+export default function ProjectTransactions({ project, transactions, partners, totals, partnerTotals, unclaimedTotal, hasUnclaimed }: any) {
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Projects', href: '/projects' },
         { title: project.name, href: `/projects/${project.id}/edit` },
         { title: 'Transactions', href: '#' },
     ];
+
+    // Calculate number of partner columns for colspan
+    const partnerColCount = partners.length + (hasUnclaimed ? 1 : 0);
+    const baseColCount = 4; // Code, Date, Step, Description
+    const actionColCount = 1; // Actions
+    const totalColCount = baseColCount + partnerColCount + actionColCount;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -33,7 +39,14 @@ export default function ProjectTransactions({ project, transactions, totals }: a
                                 <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">Date</th>
                                 <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">Step</th>
                                 <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">Description</th>
-                                <th className="px-4 py-2 text-right text-xs font-medium uppercase tracking-wider">Amount</th>
+                                {partners.map((partner: any) => (
+                                    <th key={`partner-${partner.id}`} className="px-4 py-2 text-right text-xs font-medium uppercase tracking-wider">
+                                        {partner.name}
+                                    </th>
+                                ))}
+                                {hasUnclaimed && (
+                                    <th className="px-4 py-2 text-right text-xs font-medium uppercase tracking-wider">Unclaimed</th>
+                                )}
                                 <th className="px-4 py-2 text-center text-xs font-medium uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
@@ -49,17 +62,40 @@ export default function ProjectTransactions({ project, transactions, totals }: a
                                             <div className="text-xs text-muted-foreground">{transaction.category}</div>
                                         )}
                                     </td>
-                                    <td className="px-4 py-2 text-right whitespace-nowrap">
-                                        <span
-                                            className={
-                                                transaction.type === 'income'
-                                                    ? 'text-green-600 dark:text-green-400'
-                                                    : 'text-red-600 dark:text-red-400'
-                                            }
-                                        >
-                                            {transaction.type === 'expense' ? '-' : ''}${transaction.amount_formatted}
-                                        </span>
-                                    </td>
+                                    {partners.map((partner: any) => (
+                                        <td key={`tx-${transaction.id}-partner-${partner.id}`} className="px-4 py-2 text-right whitespace-nowrap">
+                                            {transaction.partner_id === partner.id ? (
+                                                <span
+                                                    className={
+                                                        transaction.type === 'income'
+                                                            ? 'text-green-600 dark:text-green-400'
+                                                            : 'text-red-600 dark:text-red-400'
+                                                    }
+                                                >
+                                                    {transaction.type === 'expense' ? '-' : ''}${transaction.amount_formatted}
+                                                </span>
+                                            ) : (
+                                                '-'
+                                            )}
+                                        </td>
+                                    ))}
+                                    {hasUnclaimed && (
+                                        <td className="px-4 py-2 text-right whitespace-nowrap">
+                                            {transaction.partner_id === null ? (
+                                                <span
+                                                    className={
+                                                        transaction.type === 'income'
+                                                            ? 'text-green-600 dark:text-green-400'
+                                                            : 'text-red-600 dark:text-red-400'
+                                                    }
+                                                >
+                                                    {transaction.type === 'expense' ? '-' : ''}${transaction.amount_formatted}
+                                                </span>
+                                            ) : (
+                                                '-'
+                                            )}
+                                        </td>
+                                    )}
                                     <td className="px-4 py-2">
                                         <div className="flex justify-center gap-2">
                                             <Button variant="outline" size="sm" asChild>
@@ -86,23 +122,45 @@ export default function ProjectTransactions({ project, transactions, totals }: a
                             ))}
                             {transactions.data.length === 0 && (
                                 <tr>
-                                    <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
+                                    <td colSpan={totalColCount} className="px-4 py-8 text-center text-muted-foreground">
                                         No transactions found.
                                     </td>
                                 </tr>
                             )}
                             {transactions.data.length > 0 && (
-                                <tr className="bg-muted font-semibold">
-                                    <td colSpan={4} className="px-4 py-3 text-right">
-                                        Total Project:
-                                    </td>
-                                    <td className="px-4 py-3 text-right">
-                                        <div className={parseFloat(totals.net) >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
-                                            ${totals.net}
-                                        </div>
-                                    </td>
-                                    <td colSpan={1}></td>
-                                </tr>
+                                <>
+                                    <tr className="bg-muted/25 font-semibold">
+                                        <td colSpan={4} className="px-4 py-3 text-right">
+                                            Totals:
+                                        </td>
+                                        {partners.map((partner: any) => (
+                                            <td key={`total-partner-${partner.id}`} className="px-4 py-3 text-right">
+                                                <div className={parseFloat(partnerTotals[partner.id]) >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
+                                                    ${partnerTotals[partner.id]}
+                                                </div>
+                                            </td>
+                                        ))}
+                                        {hasUnclaimed && (
+                                            <td className="px-4 py-3 text-right">
+                                                <div className={parseFloat(unclaimedTotal) >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
+                                                    ${unclaimedTotal}
+                                                </div>
+                                            </td>
+                                        )}
+                                        <td></td>
+                                    </tr>
+                                    <tr className="bg-muted font-semibold">
+                                        <td colSpan={4} className="px-4 py-3 text-right">
+                                            Total Project:
+                                        </td>
+                                        <td colSpan={partnerColCount} className="px-4 py-3 text-right">
+                                            <div className={parseFloat(totals.net) >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
+                                                ${totals.net}
+                                            </div>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </>
                             )}
                         </tbody>
                     </table>
