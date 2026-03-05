@@ -1,6 +1,9 @@
+import { usePage } from '@inertiajs/react';
 import AppLogoIcon from './app-logo-icon';
 
 export default function AppLogo() {
+    const { version } = usePage().props as any;
+
     return (
         <>
             <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
@@ -10,6 +13,11 @@ export default function AppLogo() {
                 <span className="mb-0.5 truncate leading-tight font-semibold">
                     VV-Books
                 </span>
+                {version && (
+                    <span className="truncate text-[10px] text-muted-foreground leading-tight">
+                        v {version}
+                    </span>
+                )}
             </div>
         </>
     );
