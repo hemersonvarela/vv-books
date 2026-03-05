@@ -40,7 +40,7 @@ class TransactionImportController extends Controller
             Excel::import(new TransactionsImport, $file);
             DB::commit();
 
-            return redirect()->route('projects.index')->with('success', 'Transactions imported successfully.');
+            return redirect()->route('transactions.index')->with('success', 'Transactions imported successfully.');
         } catch (ValidationException $e) {
             DB::rollBack();
             $failures = $e->failures();
