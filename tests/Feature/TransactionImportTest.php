@@ -37,7 +37,7 @@ test('it accepts file with more than 8 columns', function () {
         'file' => $file,
     ]);
 
-    $response->assertRedirect(route('projects.index'));
+    $response->assertRedirect(route('transactions.index'));
     $this->assertDatabaseHas('transactions', [
         'description' => 'Test Transaction',
         'amount' => 123.45,
@@ -99,7 +99,7 @@ test('it successfully imports valid transactions', function () {
         'file' => $file,
     ]);
 
-    $response->assertRedirect(route('projects.index'));
+    $response->assertRedirect(route('transactions.index'));
     $response->assertSessionHas('success');
     $this->assertDatabaseHas('transactions', [
         'description' => 'Test Transaction',
@@ -130,7 +130,7 @@ test('it successfully imports transactions with mixed case types', function () {
         'file' => $file,
     ]);
 
-    $response->assertRedirect(route('projects.index'));
+    $response->assertRedirect(route('transactions.index'));
     $this->assertDatabaseHas('transactions', [
         'description' => 'Mixed Case',
         'type' => 'income',
