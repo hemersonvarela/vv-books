@@ -13,7 +13,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Dashboard({ stats, partnerMonthlyTotals, currentYear }: any) {
+export default function Dashboard({ stats, partnerYearlyTotals, partnerMonthlyTotals, currentYear }: any) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
@@ -43,6 +43,42 @@ export default function Dashboard({ stats, partnerMonthlyTotals, currentYear }: 
                         <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
                     </div>
                 </div>
+
+                {partnerYearlyTotals.length > 0 && (
+                    <div className="rounded-xl border border-sidebar-border/70 dark:border-sidebar-border bg-card">
+                        <div className="px-6 py-4 border-b">
+                            <h2 className="text-sm font-semibold">Partner Yearly Totals — {currentYear}</h2>
+                        </div>
+                        <div className="grid gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                            {partnerYearlyTotals.map((partner: any) => {
+                                const net = parseFloat(partner.net);
+                                return (
+                                    <div key={partner.id} className="rounded-lg border bg-background p-4 space-y-2">
+                                        <p className="text-sm font-medium truncate">{partner.name}</p>
+                                        <div className="flex justify-between text-xs text-muted-foreground">
+                                            <span>Income</span>
+                                            <span className="text-green-600 dark:text-green-400 font-medium">
+                                                {partner.income ? `$${partner.income}` : '—'}
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between text-xs text-muted-foreground">
+                                            <span>Expense</span>
+                                            <span className="text-red-600 dark:text-red-400 font-medium">
+                                                {partner.expense ? `$${partner.expense}` : '—'}
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between text-xs border-t pt-2">
+                                            <span className="text-muted-foreground">Net</span>
+                                            <span className={`font-semibold ${net >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                                                ${partner.net.replace('-', '')}
+                                            </span>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                )}
 
                 <div className="rounded-xl border border-sidebar-border/70 dark:border-sidebar-border bg-card">
                     <div className="px-6 py-4 border-b">
