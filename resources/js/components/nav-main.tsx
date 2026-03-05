@@ -39,7 +39,7 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                     <SidebarMenuItem key={item.title}>
                         {item.items ? (
                             <Collapsible
-                                defaultOpen={isItemActive(item)}
+                                defaultOpen={true}
                                 className="group/collapsible"
                             >
                                 <CollapsibleTrigger asChild>
@@ -63,9 +63,6 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                                                             ? isCurrentUrl(subItem.href)
                                                             : false
                                                     }
-                                                    tooltip={{
-                                                        children: subItem.title,
-                                                    }}
                                                 >
                                                     <Link
                                                         href={subItem.href || '#'}
