@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\ProjectStep;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class ProjectStepSeeder extends Seeder
@@ -17,7 +16,7 @@ class ProjectStepSeeder extends Seeder
             ['id' => 1,  'code' => 'LOT', 'name' => 'Lot',                     'step_order' => 1,  'status' => true],
             ['id' => 2,  'code' => 'PLN', 'name' => 'Plans',                   'step_order' => 2,  'status' => true],
             ['id' => 3,  'code' => 'PER', 'name' => 'Permits',                 'step_order' => 3,  'status' => true],
-            ['id' => 4,  'code' => 'SCG', 'name' => 'Site Clearing and Grading','step_order' => 4,  'status' => true],
+            ['id' => 4,  'code' => 'SCG', 'name' => 'Site Clearing and Grading', 'step_order' => 4,  'status' => true],
             ['id' => 5,  'code' => 'FND', 'name' => 'Foundation',              'step_order' => 5,  'status' => true],
             ['id' => 6,  'code' => 'SEP', 'name' => 'Septic Tank',             'step_order' => 6,  'status' => true],
             ['id' => 7,  'code' => 'FRM', 'name' => 'Framing',                 'step_order' => 7,  'status' => true],

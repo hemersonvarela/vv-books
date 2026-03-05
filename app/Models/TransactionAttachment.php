@@ -12,12 +12,11 @@ class TransactionAttachment extends Model
 
     protected $fillable = [
         'transaction_id',
-        'file_path'
+        'file_path',
     ];
 
     public function transaction()
     {
         return $this->belongsTo(Transaction::class);
     }
-
 }

@@ -10,6 +10,7 @@ class Contractor extends Model
 {
     /** @use HasFactory<\Database\Factories\ContractorFactory> */
     use HasFactory;
+
     use SoftDeletes;
 
     protected $fillable = [

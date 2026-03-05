@@ -10,6 +10,7 @@ class ProjectStep extends Model
 {
     /** @use HasFactory<\Database\Factories\ProjectStepFactory> */
     use HasFactory;
+
     use SoftDeletes;
 
     protected $fillable = [

@@ -10,6 +10,7 @@ class Partner extends Model
 {
     /** @use HasFactory<\Database\Factories\PartnerFactory> */
     use HasFactory;
+
     use SoftDeletes;
 
     protected $fillable = [

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('transaction_categories', function (Blueprint $table) {
             $table->id();
-            $table->string('code',3)->unique();
+            $table->string('code', 3)->unique();
             $table->string('name');
             $table->enum('type', ['income', 'expense']);
             $table->text('notes')->nullable();
