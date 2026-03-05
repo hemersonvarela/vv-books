@@ -1,5 +1,6 @@
 import transactions from '@/routes/transactions';
 import { Head, useForm, usePage } from '@inertiajs/react';
+import { useState } from 'react';
 import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -17,17 +18,24 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Import() {
+    const [fileInputKey, setFileInputKey] = useState(0);
     const form = useForm({
         file: null as File | null,
     });
 
     const { flash } = usePage().props as any;
 
+    const resetFileInput = () => {
+        form.setData('file', null);
+        setFileInputKey((k) => k + 1);
+    };
+
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
         form.post(transactions.import.store().url, {
             forceFormData: true,
-            onSuccess: () => form.reset(),
+            onSuccess: () => { form.reset(); resetFileInput(); },
+            onError: () => resetFileInput(),
         });
     };
 
@@ -59,6 +67,7 @@ export default function Import() {
                         <div className="grid gap-2">
                             <Label htmlFor="file">Transaction File</Label>
                             <Input
+                                key={fileInputKey}
                                 id="file"
                                 type="file"
                                 onChange={(e) => form.setData('file', e.target.files ? e.target.files[0] : null)}
