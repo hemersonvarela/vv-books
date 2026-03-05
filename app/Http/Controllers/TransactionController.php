@@ -37,6 +37,13 @@ class TransactionController extends Controller
             $query->whereNotNull('verified_at');
         }
 
+        // Filter by claim status
+        if (request('partner_status') === 'unclaimed') {
+            $query->whereNull('partner_id');
+        } elseif (request('partner_status') === 'claimed') {
+            $query->whereNotNull('partner_id');
+        }
+
         $transactions = $query->latest('id')->paginate(10);
 
         return Inertia::render('transactions/index', [
@@ -45,6 +52,7 @@ class TransactionController extends Controller
             'filters' => [
                 'project_id' => request('project_id'),
                 'verified_status' => request('verified_status'),
+                'partner_status' => request('partner_status'),
             ],
         ]);
     }
@@ -94,7 +102,7 @@ class TransactionController extends Controller
         if ($transaction->project_id != $validated['project_id'] || $transaction->project_step_id != $validated['project_step_id']) {
             $validated['code'] = Transaction::generateCode($validated['project_id'], $validated['project_step_id']);
         }
-        
+
         $validated['verified_at'] = now();
         $transaction->update($validated);
 

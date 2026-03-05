@@ -74,6 +74,23 @@ export default function Index({ transactions, projects, filters }: any) {
                             </SelectContent>
                         </Select>
                     </div>
+
+                    <div className="w-48">
+                        <label className="text-xs font-medium text-muted-foreground uppercase">Claim Status</label>
+                        <Select
+                            value={filters?.partner_status || 'all'}
+                            onValueChange={(value) => handleFilterChange('partner_status', value)}
+                        >
+                            <SelectTrigger>
+                                <SelectValue placeholder="All Statuses" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Statuses</SelectItem>
+                                <SelectItem value="claimed">Claimed</SelectItem>
+                                <SelectItem value="unclaimed">Unclaimed</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
                 </div>
 
                 <div className="overflow-x-auto rounded-lg border">

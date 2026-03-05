@@ -30,15 +30,17 @@ export default function Dashboard({ stats, partnerYearlyTotals, partnerMonthlyTo
                             </div>
                         </div>
                     </Link>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border bg-card p-6 hover:shadow-md transition-shadow cursor-default">
-                        <div className="flex flex-col h-full justify-between">
-                            <h3 className="text-sm font-medium text-muted-foreground">Unclaimed Transactions</h3>
-                            <div>
-                                <p className="text-3xl font-bold">{stats.no_partner_transactions}</p>
-                                <p className="text-xs text-muted-foreground mt-2">Need assignment</p>
+                    <Link href="/transactions?partner_status=unclaimed">
+                        <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border bg-card p-6 hover:shadow-md transition-shadow">
+                            <div className="flex flex-col h-full justify-between">
+                                <h3 className="text-sm font-medium text-muted-foreground">Unclaimed Transactions</h3>
+                                <div>
+                                    <p className="text-3xl font-bold">{stats.no_partner_transactions}</p>
+                                    <p className="text-xs text-muted-foreground mt-2">Click to view</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </Link>
                     <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
                         <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
                     </div>
